@@ -1,0 +1,228 @@
+---
+title: "gganimate: A Lesson with Avocados"
+author: "Kelsey E. Gonzalez"
+date: 2020-05-25T21:13:14-05:00
+summary: "A 2 hour advanced plotting workshop in R with ggplot and gganimate for the 2020 Research Bazaar Arizona workshop on May 25, 2020. "
+tags: ["Workshop"]
+image:
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+
+
+<p>Animating your ggplots may sound daunting. However, you have to add a line or two extra of code and you have an animation! <code>gganimate</code> makes animation quite accessible for users of ggplot.</p>
+<p>A cheat sheet for what we’ll cover today:</p>
+<ul>
+<li>Types of Transitions
+<ul>
+<li>transition_reveal() (good for mainly geom_line)</li>
+<li>transition_states() (good for geom_point, geom_bar, geom_col, etc)
+<ul>
+<li>splits up plot data by a discrete variable and animates between the different states.</li>
+</ul></li>
+<li>transition_time() (geom_point)
+<ul>
+<li>Instead of transitioning over a discrete variable, the transition occurs over a continuous variable (Time)<br />
+</li>
+</ul></li>
+</ul></li>
+<li>Some extras
+<ul>
+<li>shadow_mark()
+<ul>
+<li>This shadow lets you show the raw data behind the current frame. Both past and/or future raw data can be shown and styled as you want.<br />
+</li>
+</ul></li>
+<li>shadow_wake()
+<ul>
+<li>instead of leaving a more permanent mark, wake leaves a tail to show direction, but only reveals the past few states<br />
+</li>
+</ul></li>
+<li>view_follow(fixed_y = TRUE)
+<ul>
+<li>controls how your viewport changes as the transition occurs<br />
+</li>
+</ul></li>
+<li><code>anim_save()</code>
+<ul>
+<li>It works much like <code>ggsave()</code> from ggplot2 and automatically grabs the last rendered animation if you do not specify one directly.</li>
+</ul></li>
+</ul></li>
+</ul>
+<hr />
+<p>Let’s load back up our data from the previous lessons on R by Adriana Picoral (picoral.github.io/resbaz_intro_to_r/parti.html) and from Kathryn Busby on ggplot2. I’ll name the dataframe <code>avocado</code> because I can’t remember what the other instructors named their data. We will also load our packages here.</p>
+<pre class="r"><code>library(tidyverse)
+# install.packages(&quot;gganimate&quot;)
+library(gganimate)
+# install.packages(&quot;scales&quot;)
+library(scales)
+avocado &lt;- read_csv(&quot;avocado.csv&quot;)</code></pre>
+<p>Avocado data is originally from www.kaggle.com/neuromusic/avocado-prices/data.</p>
+<p>Let’s explore our data a little bit..</p>
+<pre class="r"><code>glimpse(avocado)
+summary(avocado)
+class(avocado$Date) #make sure `Date` is actually a date type 
+unique(avocado$region)# what type of regions are included here?</code></pre>
+<p>You’ll notice that our region variable is kind of all over the place. Because I’ve reviewed this before, I know we need to separate out the US level, states, regions, and cities so our graphs are on the same level.</p>
+<pre class="r"><code>avocado_us &lt;- avocado %&gt;% filter(region == &quot;TotalUS&quot;)
+states &lt;- c(&quot;California&quot;)
+avocado_CA &lt;- avocado %&gt;% filter(region %in% states)
+regions &lt;- c(&quot;West&quot;,&quot;Southeast&quot;,&quot;SouthCentral&quot;,&quot;Plains&quot;,&quot;Northeast&quot;,&quot;Midsouth&quot;,&quot;GreatLakes&quot;,&quot;WestTexNewMexico&quot;,&quot;NorthernNewEngland&quot;)
+avocado_region &lt;- avocado %&gt;% filter(region %in% regions)
+avocado_cities &lt;- avocado %&gt;% filter(!region %in% c(&quot;TotalUS&quot;, states, regions))</code></pre>
+<p>We’re finally ready to make some plots, and then build the animation into these plots.</p>
+<div id="transition_reveal" class="section level2">
+<h2>transition_reveal()</h2>
+<p>This type of transition is the simplest and acts like a piece of paper is being removed from left to right over the top of the graph to slowly reveal the result. That’s how I think about it, at least. This assume that your x axis is also what is included inside your statement transition_reveal().</p>
+<p>For this, let’s first build a static line plot that has date on the x-axis. Looking through the data, we could use <code>AveragePrice</code> or <code>Total Volume</code> on the y axis, and we could disaggregate by region, size of avocado, or type (organic versus conventional).</p>
+<p>Let’s stick to the totalUS aggregation dataset we made (avocado_us) and look at the average price of conventional and organic avocados over time.</p>
+<pre class="r"><code>ggplot(data = avocado_us, 
+       mapping = aes(x = Date, y = AveragePrice, color = type)) +
+  geom_line()</code></pre>
+<p><img src="/workshop/2020-05-25-gganimate/index_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>If we feel good on time, we can make a few adjustments to the plot before animating it.</p>
+<pre class="r"><code>ggplot(data = avocado_us, 
+       mapping = aes(x = Date, y = AveragePrice, color = type)) +
+  geom_line() +
+  scale_y_continuous(labels = scales::dollar_format()) +  # format that y axis! 
+  scale_color_manual(values= c(&quot;darkgreen&quot;, &quot;darkolivegreen3&quot;)) +
+  theme_minimal() +
+  labs(title = &quot;Average Price of US Avocados&quot;,
+       caption = &quot;Source: Kaggle&quot;)</code></pre>
+<p><img src="/workshop/2020-05-25-gganimate/index_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>This looks a lot better. I one what happened the summer of 2015! Now let’s animate this. The key to this animation is <code>transition_reveal()</code>. Inside of the function, we can write out x axis variable. While it will take a few moments to render, you should see an animated plot in your plots pane.</p>
+<pre class="r"><code>ggplot(data = avocado_us, 
+       mapping = aes(x = Date, y = AveragePrice, color = type)) +
+  geom_line() +
+  scale_y_continuous(labels = scales::dollar_format()) +  # format that y axis! 
+  scale_color_manual(values= c(&quot;darkgreen&quot;, &quot;darkolivegreen3&quot;)) +
+  theme_minimal() +
+  labs(title = &quot;Average Price of US Avocados&quot;,
+       caption = &quot;Source: Kaggle&quot;) +
+  transition_reveal(Date)</code></pre>
+<p>Let’s also save this, since each time we run the code it takes some time.</p>
+<pre class="r"><code>anim_save(filename = &quot;type_reveal.gif&quot;)</code></pre>
+<p><img src="/img/type_reveal.gif" /></p>
+<div id="challenge" class="section level3">
+<h3>Challenge</h3>
+<p>Take a few minutes to try and plot the changes in total volume of organic avocados across time for the different regions of the USA.</p>
+<hr />
+</div>
+</div>
+<div id="transition_time" class="section level2">
+<h2>transition_time()</h2>
+<p>Transition time creates new “layers” of the animation over a continous variable, usually time (i’ve never seen an exception to that). While this works best with geom_point, there’s many other options you can play around with.</p>
+<p>Let’s use two continous variables to plot this. Let’s see how well price explains the volume sold of avocados for non-organic avocados (though, it’s been awhile since I took Econ101). Let’s do this for the different cities in the US, omitting states and regions.</p>
+<pre class="r"><code>avocado_cities_filtered &lt;- avocado_cities %&gt;% 
+  filter(type == &quot;conventional&quot;,
+         Date &gt; as.Date(&quot;2018-01-01&quot;))
+ggplot(data = avocado_cities_filtered,
+       mapping = aes(x = AveragePrice, y = `Total Volume`, color = region)) +
+  geom_point()</code></pre>
+<p><img src="/workshop/2020-05-25-gganimate/index_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>That legend is really going to get in the way. Let’s remove it and customize the circles before animating.</p>
+<pre class="r"><code>ggplot(data = avocado_cities_filtered,
+       mapping = aes(x = AveragePrice, y = `Total Volume`, color = region)) +
+  scale_y_continuous(labels = scales::comma_format()) +
+  scale_x_continuous(labels = scales::dollar_format()) +
+  geom_point(aes(size = `Total Volume`), alpha = .6) +  
+  theme_minimal() +
+  theme(legend.position = &quot;none&quot;) +
+  labs(title = &quot;Avocados sold by price and city&quot;) </code></pre>
+<p><img src="/workshop/2020-05-25-gganimate/index_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p>In practice, the animation is basically layering a bunch of plots on top of each other, as if they were facet_wraps. When I’m planning out an animation, I often use facet_wrap like you learned this morning to see the different layers before I “assemble” them.</p>
+<pre class="r"><code>ggplot(data = avocado_cities_filtered,
+       mapping = aes(x = AveragePrice, y = `Total Volume`, color = region)) +
+  scale_y_continuous(labels = scales::comma_format()) +
+  scale_x_continuous(labels = scales::dollar_format()) +
+  geom_point(aes(size = `Total Volume`), alpha = .6) +  
+  theme_minimal() +
+  theme(legend.position = &quot;none&quot;) +
+  labs(title = &quot;Avocados sold by price and city&quot;) +
+  facet_wrap(~Date)</code></pre>
+<p><img src="/workshop/2020-05-25-gganimate/index_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p>Now we can move on to animating this. transition_time() will replace the previous dot, making it hard to see any trends. Let’s add <code>shadow_wake</code> so we can see the direction between points.</p>
+<p>One really cool trick I like to employ is writing in the subtitle what point in time we’re currently animating. Before it didn’t really matter because the date was on the x axis, but not its hidden. For that, we need to add some <code>{}</code> in the subtitle argument of labs.</p>
+<pre class="r"><code>ggplot(data = avocado_cities_filtered,
+       mapping = aes(x = AveragePrice, y = `Total Volume`, color = region)) +
+  scale_y_continuous(labels = scales::comma_format()) +
+  scale_x_continuous(labels = scales::dollar_format()) +
+  geom_point(aes(size = `Total Volume`), alpha = .6) +  
+  theme_minimal() +
+  theme(legend.position = &quot;none&quot;) +
+  labs(title = &quot;Avocados sold by price and city&quot;,
+       subtitle = &quot;Date: {frame_time}&quot;) +
+  transition_time(Date) +
+  shadow_wake(wake_length = 0.2)    </code></pre>
+<p>Let’s also save this, since each time we run the code it takes some time.</p>
+<pre class="r"><code>anim_save(filename = &quot;type_time.gif&quot;)</code></pre>
+<p><img src="/img/type_time.gif" /></p>
+<div id="challenge-1" class="section level3">
+<h3>Challenge</h3>
+<p>Can you use transition_time to show how the price of organic avocados change over time for California?</p>
+<hr />
+</div>
+</div>
+<div id="transition_state" class="section level2">
+<h2>transition_state()</h2>
+<p>Transition_state() creates a new animation layer across a categorical variable instead of over time.</p>
+<pre class="r"><code>avocado_region_long &lt;- avocado_region %&gt;% 
+  pivot_longer(cols = c(`4046`,`4225`,`4770`),
+               names_to = &quot;size&quot;,
+               values_to = &quot;volume&quot;)
+ggplot(data = avocado_region_long,
+       mapping = aes(x = size, y = volume, color = size)) +
+  geom_boxplot() </code></pre>
+<p><img src="/workshop/2020-05-25-gganimate/index_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<p>Let’s customize this a little to make it look nicer.</p>
+<pre class="r"><code>ggplot(data = avocado_region_long,
+       mapping = aes(x = size, y = volume, color = size)) +
+  geom_boxplot() +
+  theme_classic() +
+  scale_y_continuous(labels = scales::comma_format()) +
+  labs(title = &quot;Boxplot of volume sold by Avocado Size&quot;)</code></pre>
+<p><img src="/workshop/2020-05-25-gganimate/index_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p>It isn’t particularly helpful that the previous view completely dissappears as in transition_time. Instead of using <code>shadow_wake()</code>, let’s use <code>shadow_mark()</code> to the animated plot to keep the past views visible.</p>
+<pre class="r"><code>ggplot(data = avocado_region_long,
+       mapping = aes(x = size, y = volume, color = size)) +
+  geom_boxplot() +
+  theme_classic() +
+  scale_y_continuous(labels = scales::comma_format()) +
+  labs(title = &quot;Boxplot of volume sold by Avocado Size&quot;) +
+  transition_states(size, state_length = 1, transition_length = 1) +
+  shadow_mark(alpha = 0.3, size = 0.5)    </code></pre>
+<p>Let’s also save this, since each time we run the code it takes some time.</p>
+<pre class="r"><code>anim_save(filename = &quot;type_state.gif&quot;)</code></pre>
+<p><img src="/img/type_state.gif" /></p>
+<hr />
+<div id="challenge-answers" class="section level3">
+<h3>Challenge answers:</h3>
+<p>Challenge 1:
+Take a few minutes to try and plot the changes in total volume across time for the different regions of the USA.</p>
+<pre class="r"><code>ggplot(data = filter(avocado_region, type == &quot;organic&quot;), 
+       aes(x = Date, y = `Total Volume`, color = region)) +
+  geom_line() +
+  theme_minimal() +
+  labs(title = &quot;Average Price of US Avocados&quot;,
+       caption = &quot;Source: Kaggle&quot;,
+       subtitle = &quot;Date: {frame_along}&quot;) +
+  transition_reveal(Date)
+anim_save(&quot;challenge_1.gif&quot;)</code></pre>
+<p><img src="/img/challenge_1.gif" /></p>
+<p>Challenge 2: Can you use transition_time to show how the price of organic avocados change over time for California?</p>
+<pre class="r"><code>ggplot(data = filter(avocado_CA, type == &quot;organic&quot;),
+       mapping = aes(x = Date, y = AveragePrice)) +
+  scale_y_continuous(labels = scales::dollar_format()) +
+  geom_point(alpha = .6) +  
+  theme_minimal() +
+  theme(legend.position = &quot;none&quot;) +
+  labs(title = &quot;The fluctuating price of organic avocados in California&quot;,
+       subtitle = &quot;Date: {frame_time}&quot;) +
+  transition_time(Date) +
+  shadow_wake(wake_length = 0.2)    
+anim_save(&quot;challenge_2.gif&quot;)</code></pre>
+<p><img src="/img/challenge_2.gif" /></p>
+</div>
+</div>

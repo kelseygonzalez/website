@@ -1,0 +1,565 @@
+---
+title: KEYS R workshop
+author: "Kelsey E. Gonzalez"
+date: "2020-06-10T09:13:14-05:00"
+summary: "A short 2 hour introduction to R and the tidyverse  for BIO5 Institute's KEYS (Keep Engaging Youth in Science) Research Internship Program on June 10, 2020. "
+tags: ["Workshop"]
+image:
+  focal_point: ''
+  preview_only: no
+---
+
+
+
+<div id="about" class="section level1">
+<h1>About</h1>
+<p>This is a short 1 hour and 45 minutes introduction to R and the tidyverse prepared and delivered by <a href="https://kelseygonzalez.github.io/">Kelsey Gonzalez</a> for BIO5 Institute’s <a href="https://keys.arizona.edu/">KEYS</a> (Keep Engaging Youth in Science) Research Internship Program on June 10, 2020.</p>
+<p>A PDF of this lesson is available <a href="https://github.com/kelseygonzalez/R-Keys-Workshop-June10/blob/master/R_KEYS_JUNE9.pdf">here</a></p>
+<p>This lesson is largely adapted from <a href="http://swcarpentry.github.io/r-novice-gapminder/">Software</a> and <a href="https://datacarpentry.org/r-socialsci/">Data Carpentry</a> materials by Kelsey Gonzalez for use with the <a href="https://github.com/allisonhorst/penguins">Penguins</a> dataset.</p>
+</div>
+<div id="getting-set-up" class="section level1">
+<h1>Getting set up</h1>
+<p>R works by having a base programming language that can be added on to with community-created open-source extensions called <em>packages</em>. We’re going to first install two packages that we will work with today.</p>
+<pre class="r"><code>install.packages(&quot;tidyverse&quot;)
+install.packages(&quot;palmerpenguins&quot;)</code></pre>
+<pre class="r"><code>library(tidyverse)
+library(palmerpenguins)</code></pre>
+<div id="what-is-an-r-package" class="section level2">
+<h2>What is an R package?</h2>
+<p>An R package is a complete unit for sharing code with others. Each R package contains the code for a set of R functions, the documentation (or description) for each of the functions, as well as a practice dataset to learn the functions on.</p>
+<p>Generally, each R package is built with a specific task in mind. For instance, the package <strong><code>dplyr</code></strong> provides easy tools for the most common data manipulation tasks. It is built to work directly with data frames, with many common tasks optimized by being written in a compiled language (C++) (not all R packages are written in R!).</p>
+<p>But there are also packages available for a wide range of tasks including building plots (<strong><code>ggplot2</code></strong>, which we’ll see later), downloading data from the NCBI database, or performing statistical analysis on your data set. Many packages such as these are housed on, and downloadable from, the <strong>C</strong>omprehensive <strong>R</strong> <strong>A</strong>rchive <strong>N</strong>etwork (CRAN) using <code>install.packages</code>. This function makes the package accessible by your R installation with the command <code>library()</code>, as you did with <code>tidyverse</code> earlier.</p>
+<p>To easily access the documentation for a package within R or RStudio, use <code>help(package = "package_name")</code>.</p>
+<p>Let’s first load the data we’ll be using today, which contains observations for 3 penguin species on islands in the Palmer Archipelago, Antarctica. More information about this dataset can be found at <a href="github.com/allisonhorst/penguins">github.com/allisonhorst/penguins</a>.</p>
+<p>We only have a short lesson today, so I won’t get into the specifics on what we’re doing here. Just know we loaded a package called penguins above which contained a dataset called penguins. By calling <code>data()</code>, we’re asking r to load a dataset that is in the package. <code>R</code> also can read csv files, excel files, and <em>many</em> other data types.</p>
+<pre class="r"><code>data(penguins)</code></pre>
+</div>
+</div>
+<div id="data-wrangling-visualization" class="section level1">
+<h1>Data Wrangling &amp; visualization:</h1>
+<p>adapted from: <a href="https://datacarpentry.org/r-socialsci/03-dplyr-tidyr/index.html" class="uri">https://datacarpentry.org/r-socialsci/03-dplyr-tidyr/index.html</a></p>
+<p>questions:</p>
+<ul>
+<li>How can I select specific rows and/or columns from a data frame?<br />
+</li>
+<li>How can I combine multiple commands into a single command?<br />
+</li>
+<li>How can create new columns or remove existing columns from a data frame?<br />
+</li>
+<li>How can I reformat a dataframe to meet my needs?</li>
+</ul>
+<p>objectives:</p>
+<ul>
+<li>Describe the purpose of an R package and the <strong><code>dplyr</code></strong> and <strong><code>tidyr</code></strong> packages.<br />
+</li>
+<li>Select certain columns in a data frame with the <strong><code>dplyr</code></strong> function <code>select</code>.<br />
+</li>
+<li>Select certain rows in a data frame according to filtering conditions with the <strong><code>dplyr</code></strong> function <code>filter</code>.<br />
+</li>
+<li>Link the output of one <strong><code>dplyr</code></strong> function to the input of another function with the ‘pipe’ operator <code>%&gt;%</code>.<br />
+</li>
+<li>Add new columns to a data frame that are functions of existing columns with <code>mutate</code>.<br />
+</li>
+<li>Use the split-apply-combine concept for data analysis.<br />
+</li>
+<li>Use <code>summarize</code>, <code>group_by</code>, and <code>count</code> to split a data frame into groups of observations, apply a summary statistics for each group, and then combine the results.<br />
+</li>
+<li>Describe the concept of a wide and a long table format and for which purpose those formats are useful.</li>
+<li>Describe what key-value pairs are.<br />
+</li>
+<li>Reshape a data frame from long to wide format and back with the <code>spread</code> and <code>gather</code> commands from the <strong><code>tidyr</code></strong> package.<br />
+</li>
+<li>Export a data frame to a csv file.</li>
+</ul>
+<p>keypoints:</p>
+<ul>
+<li>Use the <code>dplyr</code> package to manipulate dataframes.<br />
+</li>
+<li>Use <code>select()</code> to choose variables from a dataframe.<br />
+</li>
+<li>Use <code>filter()</code> to choose data based on values.<br />
+</li>
+<li>Use <code>group_by()</code> and <code>summarize()</code> to work with subsets of data.<br />
+</li>
+<li>Use <code>mutate()</code> to create new variables.<br />
+</li>
+<li>Use the <code>tidyr</code> package to change the layout of dataframes.</li>
+</ul>
+<div id="data-manipulation-using-dplyr" class="section level2">
+<h2>Data Manipulation using <strong><code>dplyr</code></strong></h2>
+<p><strong><code>dplyr</code></strong> is a package for making tabular data manipulation easier by using a limited set of functions that can be combined to extract and summarize insights from your data.</p>
+<p>Similarly to <strong><code>readr</code></strong>, <strong><code>dplyr</code></strong> and <strong><code>tidyr</code></strong> are also part of the tidyverse. These packages were loaded in R’s memory when we called <code>library(tidyverse)</code> earlier.</p>
+<p>To learn more about <strong><code>dplyr</code></strong> after the workshop, you may want to check out this
+<a href="https://github.com/rstudio/cheatsheets/raw/master/data-transformation.pdf">handy data transformation with <strong><code>dplyr</code></strong> cheatsheet</a>.</p>
+<p>We’re going to learn some of the most common <strong><code>dplyr</code></strong> functions:</p>
+<ul>
+<li><code>select()</code>: subset columns</li>
+<li><code>filter()</code>: subset rows on conditions</li>
+<li><code>mutate()</code>: create new columns by using information from other columns</li>
+<li><code>group_by()</code> and <code>summarize()</code>: create summary statistics on grouped data</li>
+<li><code>arrange()</code>: sort results</li>
+</ul>
+</div>
+<div id="explore-our-data" class="section level2">
+<h2>Explore our data</h2>
+<p>Let’s explore our data first. There’s 7 variables or columns that we have to work with.</p>
+<ul>
+<li><code>species</code>: penguin species (Chinstrap, Adélie, or Gentoo)</li>
+<li><code>bill_length_mm</code>: bill length (mm)</li>
+<li><code>bill_depth_mm</code>: bill depth (mm)</li>
+<li><code>flipper_length_mm</code>: flipper length (mm)</li>
+<li><code>body_mass_g</code>: body mass (g)</li>
+<li><code>island</code>: island name (Dream, Torgersen, or Biscoe) in the Palmer Archipelago (Antarctica)</li>
+<li><code>sex</code>: penguin sex</li>
+</ul>
+<p>Here’s what the three penguins species look like in real life:</p>
+<p><img src="https://github.com/allisonhorst/palmerpenguins/raw/master/man/figures/lter_penguins.png" width="300" /></p>
+<p>We have a few options to preview our dataframe. My favorite is <code>glimpse()</code></p>
+<pre class="r"><code>glimpse(penguins)</code></pre>
+<p>You can also <code>View()</code> the data, which opens the data in a R Studio viewer pane. Note the capital V.</p>
+<pre class="r"><code>View(penguins)</code></pre>
+</div>
+<div id="selecting-columns-and-filtering-rows" class="section level2">
+<h2>Selecting columns and filtering rows</h2>
+<p>To select columns of a data frame, use <code>select()</code>. The first argument to this function is the data frame (<code>penguins</code>), and the subsequent arguments are the columns to keep.</p>
+<pre class="r"><code>select(penguins, species, body_mass_g, sex)</code></pre>
+<p>To choose rows based on a specific criteria, use <code>filter()</code>:</p>
+<pre class="r"><code>filter(penguins, island == &quot;Biscoe&quot;)</code></pre>
+<p>The filter function works with most boolean operators, namely:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">Operator</th>
+<th align="center">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><code>&lt;</code></td>
+<td align="center">less than</td>
+</tr>
+<tr class="even">
+<td align="center"><code>&lt;=</code></td>
+<td align="center">less than or equal to</td>
+</tr>
+<tr class="odd">
+<td align="center"><code>&gt;</code></td>
+<td align="center">greater than</td>
+</tr>
+<tr class="even">
+<td align="center"><code>&gt;=</code></td>
+<td align="center">greater than or equal to</td>
+</tr>
+<tr class="odd">
+<td align="center"><code>==</code></td>
+<td align="center">exactly equal to</td>
+</tr>
+<tr class="even">
+<td align="center"><code>!=</code></td>
+<td align="center">not equal to</td>
+</tr>
+<tr class="odd">
+<td align="center"><code>!x</code></td>
+<td align="center">Not x</td>
+</tr>
+<tr class="even">
+<td align="center"><code>x | y</code></td>
+<td align="center">x OR y</td>
+</tr>
+<tr class="odd">
+<td align="center"><code>x &amp; y</code></td>
+<td align="center">x AND y</td>
+</tr>
+<tr class="even">
+<td align="center"><code>isTRUE(x)</code></td>
+<td align="center">test if X is TRUE</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="pipes" class="section level2">
+<h2>Pipes</h2>
+<p>What if you want to select and filter at the same time? There are three ways to do this: use intermediate steps, nested functions, or pipes.</p>
+<p>With intermediate steps, you create a temporary data frame and use that as input to the next function, like this:</p>
+<pre class="r"><code>penguins_biscoe &lt;- filter(penguins, island == &quot;Biscoe&quot;)
+penguins_biscoe &lt;- select(penguins_biscoe, species, body_mass_g, sex)</code></pre>
+<p>This is readable, but can clutter up your workspace with lots of objects that you have to name individually. With multiple steps, that can be hard to keep track of.</p>
+<p>You can also nest functions (i.e. one function inside of another), like this:</p>
+<pre class="r"><code>penguins_Biscoe &lt;- select(filter(penguins, island == &quot;Biscoe&quot;),  species, body_mass_g, sex)</code></pre>
+<p>This is handy, but can be difficult to read if too many functions are nested, as R evaluates the expression from the inside out (in this case, filtering, then selecting).</p>
+<p>The last option, <em>pipes</em>, are a powerful addition to R. Pipes let you take the output of one function and send it directly to the next, which is useful when you need to do many things to the same dataset. Pipes in R look like <code>%&gt;%</code> and are made available via the <strong><code>magrittr</code></strong> package, installed automatically with <strong><code>dplyr</code></strong>. If you use RStudio, you can type the pipe with <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>M</kbd> if you have a PC or <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>M</kbd> if you have a Mac.</p>
+<pre class="r"><code>penguins %&gt;%
+    filter(island == &quot;Biscoe&quot;) %&gt;%
+    select(species, body_mass_g, sex)</code></pre>
+<pre><code>## # A tibble: 168 x 3
+##    species body_mass_g sex   
+##    &lt;fct&gt;         &lt;int&gt; &lt;fct&gt; 
+##  1 Adelie         3400 female
+##  2 Adelie         3600 male  
+##  3 Adelie         3800 female
+##  4 Adelie         3950 male  
+##  5 Adelie         3800 male  
+##  6 Adelie         3800 female
+##  7 Adelie         3550 male  
+##  8 Adelie         3200 female
+##  9 Adelie         3150 female
+## 10 Adelie         3950 male  
+## # … with 158 more rows</code></pre>
+<p>In the above code, we use the pipe to send the <code>penguins</code> dataset first through <code>filter()</code> to keep rows where <code>island</code> is “Biscoe”, then through <code>select()</code> to keep only the <code>species</code>, <code>body_mass_g</code>,and <code>sex</code> columns. Since <code>%&gt;%</code> takes the object on its left and passes it as the first argument to the function on its right, we don’t need to explicitly include the data frame as an argument to the <code>filter()</code> and <code>select()</code> functions any more.</p>
+<p>Some may find it helpful to read the pipe like the word “then”. For instance, in the above example, we take the data frame <code>penguins</code>, <em>then</em> we <code>filter</code> for rows with <code>island == "Biscoe"</code>, <em>then</em> we <code>select</code> columns <code>species</code>, <code>body_mass_g</code>,and <code>sex</code>. The <strong><code>dplyr</code></strong> functions by themselves are somewhat simple, but by combining them into linear workflows with the pipe, we can accomplish more complex manipulations of data frames.</p>
+<p>If we want to create a new object with this smaller version of the data, we can assign it a new name:</p>
+<pre class="r"><code>penguins_biscoe &lt;- penguins %&gt;%
+    filter(island == &quot;Biscoe&quot;) %&gt;%
+    select(species, body_mass_g, sex)
+
+penguins_biscoe</code></pre>
+<pre><code>## # A tibble: 168 x 3
+##    species body_mass_g sex   
+##    &lt;fct&gt;         &lt;int&gt; &lt;fct&gt; 
+##  1 Adelie         3400 female
+##  2 Adelie         3600 male  
+##  3 Adelie         3800 female
+##  4 Adelie         3950 male  
+##  5 Adelie         3800 male  
+##  6 Adelie         3800 female
+##  7 Adelie         3550 male  
+##  8 Adelie         3200 female
+##  9 Adelie         3150 female
+## 10 Adelie         3950 male  
+## # … with 158 more rows</code></pre>
+<p>Note that the final data frame (<code>penguins_biscoe</code>) is the leftmost part of this expression becuase it is receiving an assignment.</p>
+<blockquote>
+<h2 id="exercise">Exercise</h2>
+<p>Using pipes, subset the <code>penguins</code> data to include all species <em>EXCEPT</em> <em>Adelie</em> and retain the species column in addition to those relating to their bill.
+## Solution</p>
+</blockquote>
+<pre class="r"><code>penguins %&gt;%
+    filter(species != &quot;Adelie&quot;) %&gt;%
+    select(bill_length_mm, bill_depth_mm)</code></pre>
+<div id="mutate" class="section level3">
+<h3>Mutate</h3>
+<p>Frequently you’ll want to create new columns based on the values in existing columns, for example to do unit conversions, or to find the ratio of values in two columns. For this we’ll use <code>mutate()</code>.</p>
+<p>We might be interested in the flipper length of penguins in cm instead of milimeters:</p>
+<pre class="r"><code>penguins %&gt;%
+    mutate(flipper_length_cm = flipper_length_mm / 10)</code></pre>
+<pre><code>## # A tibble: 344 x 9
+##    species island bill_length_mm bill_depth_mm flipper_length_… body_mass_g
+##    &lt;fct&gt;   &lt;fct&gt;           &lt;dbl&gt;         &lt;dbl&gt;            &lt;int&gt;       &lt;int&gt;
+##  1 Adelie  Torge…           39.1          18.7              181        3750
+##  2 Adelie  Torge…           39.5          17.4              186        3800
+##  3 Adelie  Torge…           40.3          18                195        3250
+##  4 Adelie  Torge…           NA            NA                 NA          NA
+##  5 Adelie  Torge…           36.7          19.3              193        3450
+##  6 Adelie  Torge…           39.3          20.6              190        3650
+##  7 Adelie  Torge…           38.9          17.8              181        3625
+##  8 Adelie  Torge…           39.2          19.6              195        4675
+##  9 Adelie  Torge…           34.1          18.1              193        3475
+## 10 Adelie  Torge…           42            20.2              190        4250
+## # … with 334 more rows, and 3 more variables: sex &lt;fct&gt;, year &lt;int&gt;,
+## #   flipper_length_cm &lt;dbl&gt;</code></pre>
+<p>We may be interested in investigating whether being a member of an irrigation association had any effect on the ratio of household members to rooms. To look at this relationship, we will first remove data from our dataset where the respondent didn’t answer the question of whether they were a member of an irrigation association. These cases are recorded as “NULL” in the dataset.</p>
+<blockquote>
+<h2 id="exercise-1">Exercise</h2>
+<p>Create a new data frame from the <code>penguins</code> data that meets the following criteria: contains only the <code>species</code> column and a new column called <code>body_mass_kg</code> containing a transformed body_mass_g. Only the rows where <code>body_mass_kg</code> is greater than 4 should be shown in the final data frame. <em>How many rows do you have? </em></p>
+<p><strong>Hint</strong>: think about how the commands should be ordered to produce this data frame!</p>
+<h2 id="solution">Solution</h2>
+</blockquote>
+<pre class="r"><code>penguins_large &lt;- penguins %&gt;%
+    mutate(body_mass_kg = body_mass_g / 1000) %&gt;%
+    filter(body_mass_kg &gt; 4) %&gt;%
+    select(species, body_mass_kg)</code></pre>
+</div>
+<div id="split-apply-combine-data-analysis-and-the-summarize-function" class="section level3">
+<h3>Split-apply-combine data analysis and the summarize() function</h3>
+<p>Many data analysis tasks can be approached using the <em>split-apply-combine</em> paradigm: split the data into groups, apply some analysis to each group, and then combine the results. <strong><code>dplyr</code></strong> makes this very easy through the use of the <code>group_by()</code> function.</p>
+<div id="the-summarize-function" class="section level4">
+<h4>The <code>summarize()</code> function</h4>
+<p><code>group_by()</code> is often used together with <code>summarize()</code>, which collapses each group into a single-row summary of that group. <code>group_by()</code> takes as arguments the column names that contain the <strong>categorical</strong> variables for which you want to calculate the summary statistics. So to compute the average household size by island:</p>
+<pre class="r"><code>penguins %&gt;%
+    group_by(island) %&gt;%
+    summarize(mean_flipper_length_mm = mean(flipper_length_mm))</code></pre>
+<pre><code>## # A tibble: 3 x 2
+##   island    mean_flipper_length_mm
+##   &lt;fct&gt;                      &lt;dbl&gt;
+## 1 Biscoe                       NA 
+## 2 Dream                       193.
+## 3 Torgersen                    NA</code></pre>
+<p>You may also have noticed that the output has a lot of <code>NA</code>! When <code>R</code> does calculations with missing data, it (correctly) doesn’t know how to evaluate them and forces the result to <code>NA</code>. to solve this, we need to add in a special option to tell R that we want to ignore the missing values.</p>
+<p>Use the <code>?</code> function on <code>mean()</code> to figure out what this option is.</p>
+<pre class="r"><code>penguins %&gt;%
+    group_by(island) %&gt;%
+    summarize(mean_flipper_length_mm = mean(flipper_length_mm, na.rm = TRUE))</code></pre>
+<pre><code>## # A tibble: 3 x 2
+##   island    mean_flipper_length_mm
+##   &lt;fct&gt;                      &lt;dbl&gt;
+## 1 Biscoe                      210.
+## 2 Dream                       193.
+## 3 Torgersen                   191.</code></pre>
+<p>You can also group by multiple columns:</p>
+<pre class="r"><code>penguins %&gt;%
+    group_by(island, species) %&gt;%
+    summarize(mean_flipper_length_mm = mean(flipper_length_mm, na.rm = TRUE))</code></pre>
+<pre><code>## # A tibble: 5 x 3
+## # Groups:   island [3]
+##   island    species   mean_flipper_length_mm
+##   &lt;fct&gt;     &lt;fct&gt;                      &lt;dbl&gt;
+## 1 Biscoe    Adelie                      189.
+## 2 Biscoe    Gentoo                      217.
+## 3 Dream     Adelie                      190.
+## 4 Dream     Chinstrap                   196.
+## 5 Torgersen Adelie                      191.</code></pre>
+<p>I expected to get 9 rows because we have 3 islands and 3 species of penguin. What do you think is going on here?</p>
+<p>Once the data are grouped, you can also summarize multiple variables at the same time (and not necessarily on the same variable). For instance, we could add a column indicating the minimum and maximum flipper length for each island for each species:</p>
+<pre class="r"><code>penguins %&gt;%
+    group_by(island, species) %&gt;%
+    summarize(mean_flipper_length_mm = mean(flipper_length_mm, na.rm = TRUE),
+              min_flipper_length_mm = min(flipper_length_mm, na.rm = TRUE),
+              max_flipper_length_mm = max(flipper_length_mm, na.rm = TRUE))</code></pre>
+<pre><code>## # A tibble: 5 x 5
+## # Groups:   island [3]
+##   island   species   mean_flipper_lengt… min_flipper_length… max_flipper_length…
+##   &lt;fct&gt;    &lt;fct&gt;                   &lt;dbl&gt;               &lt;int&gt;               &lt;int&gt;
+## 1 Biscoe   Adelie                   189.                 172                 203
+## 2 Biscoe   Gentoo                   217.                 203                 231
+## 3 Dream    Adelie                   190.                 178                 208
+## 4 Dream    Chinstrap                196.                 178                 212
+## 5 Torgers… Adelie                   191.                 176                 210</code></pre>
+<p>It is sometimes useful to rearrange the result of a query to inspect the values. For instance, we can sort on <code>mean_flipper_length_mm</code> to put the group with the shortest flippers first:</p>
+<pre class="r"><code>penguins %&gt;%
+    group_by(island, species) %&gt;%
+    summarize(mean_flipper_length_mm = mean(flipper_length_mm, na.rm = TRUE),
+              min_flipper_length_mm = min(flipper_length_mm, na.rm = TRUE),
+              max_flipper_length_mm = max(flipper_length_mm, na.rm = TRUE)) %&gt;%
+    arrange(mean_flipper_length_mm)</code></pre>
+<pre><code>## # A tibble: 5 x 5
+## # Groups:   island [3]
+##   island   species   mean_flipper_lengt… min_flipper_length… max_flipper_length…
+##   &lt;fct&gt;    &lt;fct&gt;                   &lt;dbl&gt;               &lt;int&gt;               &lt;int&gt;
+## 1 Biscoe   Adelie                   189.                 172                 203
+## 2 Dream    Adelie                   190.                 178                 208
+## 3 Torgers… Adelie                   191.                 176                 210
+## 4 Dream    Chinstrap                196.                 178                 212
+## 5 Biscoe   Gentoo                   217.                 203                 231</code></pre>
+<p>To sort in descending order, we need to add the <code>desc()</code> function.</p>
+<pre class="r"><code>penguins %&gt;%
+    group_by(island, species) %&gt;%
+    summarize(mean_flipper_length_mm = mean(flipper_length_mm, na.rm = TRUE),
+              min_flipper_length_mm = min(flipper_length_mm, na.rm = TRUE),
+              max_flipper_length_mm = max(flipper_length_mm, na.rm = TRUE)) %&gt;%
+    arrange(desc(mean_flipper_length_mm))</code></pre>
+<pre><code>## # A tibble: 5 x 5
+## # Groups:   island [3]
+##   island   species   mean_flipper_lengt… min_flipper_length… max_flipper_length…
+##   &lt;fct&gt;    &lt;fct&gt;                   &lt;dbl&gt;               &lt;int&gt;               &lt;int&gt;
+## 1 Biscoe   Gentoo                   217.                 203                 231
+## 2 Dream    Chinstrap                196.                 178                 212
+## 3 Torgers… Adelie                   191.                 176                 210
+## 4 Dream    Adelie                   190.                 178                 208
+## 5 Biscoe   Adelie                   189.                 172                 203</code></pre>
+<blockquote>
+<h2 id="exercise-2">Exercise:</h2>
+<p>Use <code>group_by()</code> and <code>summarize()</code> to find the mean bill_length and bill_depth each species.</p>
+<h2 id="solution-1">Solution</h2>
+</blockquote>
+<pre class="r"><code>penguins %&gt;%
+  group_by(species) %&gt;%
+  summarize(
+      mean_bill_length = mean(bill_length_mm, na.rm = TRUE),
+      mean_bill_depth = mean(bill_depth_mm, na.rm = TRUE)
+  )</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div id="data-visualization" class="section level1">
+<h1>Data Visualization</h1>
+<p>adapted from: <a href="https://datacarpentry.org/r-socialsci/04-ggplot2/index.html" class="uri">https://datacarpentry.org/r-socialsci/04-ggplot2/index.html</a></p>
+<p>questions:</p>
+<ul>
+<li>What are the components of a ggplot?<br />
+</li>
+<li>How do I create scatterplots, boxplots, and barplots?<br />
+</li>
+<li>How can I change the aesthetics (ex. colour, transparency) of my plot?<br />
+</li>
+<li>How can I create multiple plots at once?</li>
+</ul>
+<p>objectives:</p>
+<ul>
+<li>Produce scatter plots, boxplots, and time series plots using ggplot.<br />
+</li>
+<li>Set universal plot settings.<br />
+</li>
+<li>Describe what faceting is and apply faceting in ggplot.<br />
+</li>
+<li>Modify the aesthetics of an existing ggplot plot (including axis labels and color).<br />
+</li>
+<li>Build complex and customized plots from data in a data frame.</li>
+</ul>
+<p>keypoints:</p>
+<ul>
+<li><code>ggplot2</code> is a flexible and useful tool for creating plots in R.<br />
+</li>
+<li>The data set and coordinate system can be defined using the <code>ggplot</code> function.<br />
+</li>
+<li>Additional layers, including geoms, are added using the <code>+</code> operator.<br />
+</li>
+<li>Boxplots are useful for visualizing the distribution of a continuous variable.<br />
+</li>
+<li>Barplot are useful for visualizing categorical data.<br />
+</li>
+<li>Faceting allows you to generate multiple plots based on a categorical variable.</li>
+</ul>
+<div id="plotting-with-ggplot2" class="section level2">
+<h2>Plotting with <strong><code>ggplot2</code></strong></h2>
+<p><strong><code>ggplot2</code></strong> is a plotting package that makes it simple to create complex plots from data stored in a data frame. It provides a programmatic interface for specifying what variables to plot, how they are displayed, and general visual properties. Therefore, we only need minimal changes if the underlying data change or if we decide to change from a bar plot to a scatterplot. This helps in creating publication quality plots with minimal amounts of adjustments and tweaking.</p>
+<p>ggplot graphics are built step by step by adding new elements. Adding layers in this fashion allows for extensive flexibility and customization of plots.</p>
+<p>To learn more about <strong><code>ggplot2</code></strong> after the workshop, you may want to check out this
+<a href="https://github.com/rstudio/cheatsheets/raw/master/data-visualization-2.1.pdf">handy data transformation with <strong><code>ggplot2</code></strong> cheatsheet</a>.</p>
+<p>To build a ggplot, we will use the following basic template that can be used for different types of plots:</p>
+<pre><code>ggplot(data = &lt;DATA&gt;, mapping = aes(&lt;MAPPINGS&gt;)) +  &lt;GEOM_FUNCTION&gt;()</code></pre>
+<ul>
+<li>use the <code>ggplot()</code> function and bind the plot to a specific data frame using the <code>data</code> argument</li>
+</ul>
+<pre class="r"><code>ggplot(data = penguins)</code></pre>
+<ul>
+<li>define a mapping (using the aesthetic (<code>aes</code>) function), by selecting the variables to be plotted and specifying how to present them in the graph, e.g. as x/y positions or characteristics such as size, shape, color, etc.</li>
+</ul>
+<pre class="r"><code>ggplot(data = penguins, aes(x = flipper_length_mm, y = body_mass_g)</code></pre>
+<ul>
+<li><p>add ‘geoms’ – graphical representations of the data in the plot (points,
+lines, bars). <strong><code>ggplot2</code></strong> offers many different geoms; we will use some
+common ones today, including:</p></li>
+<li><p><code>geom_point()</code> for scatter plots, dot plots, etc.</p></li>
+<li><p><code>geom_boxplot()</code> for, well, boxplots!</p></li>
+<li><p><code>geom_line()</code> for trend lines, time series, etc.</p></li>
+</ul>
+<p>To add a geom to the plot use the <code>+</code> operator. Because we have two continuous variables, let’s use <code>geom_point()</code> first:</p>
+<pre class="r"><code>ggplot(data = penguins, aes(x = flipper_length_mm, y = body_mass_g)) +
+    geom_point()</code></pre>
+<p><img src="/workshop/2020-06-10-keys/index_files/figure-html/first-ggplot-1.png" width="672" /></p>
+<p>The <code>+</code> in the <strong><code>ggplot2</code></strong> package is particularly useful because it allows you to modify existing <code>ggplot</code> objects. This means you can easily set up plot templates and conveniently explore different types of plots, so the above plot can also be generated with code like this:</p>
+<pre class="r"><code># Assign plot to a variable
+penguins_plot &lt;- ggplot(data = penguins, aes(x = flipper_length_mm, y = body_mass_g))
+
+# Draw the plot
+penguins_plot +
+    geom_point()</code></pre>
+<blockquote>
+<h2 id="notes">Notes</h2>
+<ul>
+<li>Anything you put in the <code>ggplot()</code> function can be seen by any geom layers that you add (i.e., these are universal plot settings). This includes the x- and y-axis mapping you set up in <code>aes()</code>.</li>
+<li>You can also specify mappings for a given geom independently of the mapping defined globally in the <code>ggplot()</code> function.</li>
+<li>The <code>+</code> sign used to add new layers must be placed at the end of the line containing the <em>previous</em> layer. If, instead, the <code>+</code> sign is added at the beginning of the line containing the new layer, <strong><code>ggplot2</code></strong> will not add the new layer and will return an error message.</li>
+</ul>
+</blockquote>
+<pre class="r"><code>## This is the correct syntax for adding layers
+penguins_plot +
+    geom_point()
+
+## This will not add the new layer and will return an error message
+penguins_plot
++ geom_point()</code></pre>
+</div>
+<div id="building-your-plots-iteratively" class="section level2">
+<h2>Building your plots iteratively</h2>
+<p>Building plots with <strong><code>ggplot2</code></strong> is typically an iterative process. We start by defining the dataset we’ll use, lay out the axes, and choose a geom:</p>
+<pre class="r"><code>ggplot(data = penguins, aes(x = flipper_length_mm, y = body_mass_g)) +
+    geom_point()</code></pre>
+<p><img src="/workshop/2020-06-10-keys/index_files/figure-html/create-ggplot-object-1.png" width="672" /></p>
+<p>Then, we start modifying this plot to extract more information from it. For instance, we can add transparency (<code>alpha</code>) to avoid overplotting:</p>
+<pre class="r"><code>ggplot(data = penguins, aes(x = flipper_length_mm, y = body_mass_g)) +
+    geom_point(alpha = 0.5)</code></pre>
+<p><img src="/workshop/2020-06-10-keys/index_files/figure-html/adding-transparency-1.png" width="672" /></p>
+<p>That only helped a little bit with the overplotting problem. We can also introduce a little bit of randomness into the position of our points using the <code>geom_jitter()</code> function.</p>
+<pre class="r"><code>ggplot(data = penguins, aes(x = flipper_length_mm, y = body_mass_g)) +
+    geom_jitter(alpha = 0.5)</code></pre>
+<p><img src="/workshop/2020-06-10-keys/index_files/figure-html/adding-jitter-1.png" width="672" /></p>
+<p>We can also add colors for all the points:</p>
+<pre class="r"><code>ggplot(data = penguins, aes(x = flipper_length_mm, y = body_mass_g)) +
+    geom_jitter(alpha = 0.5, color = &quot;blue&quot;)</code></pre>
+<p><img src="/workshop/2020-06-10-keys/index_files/figure-html/adding-colors-1.png" width="672" /></p>
+<p>Or to color each species in the plot differently, you could use a vector as an input to the argument <strong><code>color</code></strong>. Because we are now mapping features of the data to a color, instead of setting one color for all points, the color now needs to be set inside a call to the <strong><code>aes</code></strong> function. <strong><code>ggplot2</code></strong> will provide a different color corresponding to different values in the vector. We set the value of <strong><code>alpha</code></strong> outside of the <strong><code>aes</code></strong> function call because we are using the same value for all points. Here is an example where we color by <strong><code>island</code></strong>:</p>
+<pre class="r"><code>ggplot(data = penguins, aes(x = flipper_length_mm, y = body_mass_g)) +
+    geom_jitter(aes(color = species), alpha = 0.5)</code></pre>
+<p><img src="/workshop/2020-06-10-keys/index_files/figure-html/color-by-species-1.png" width="672" /></p>
+<p>There appears to be a positive trend between flipper length and body massof penguins. This trend does not appear to be different by species, but we can see that Chinstrap and Adelie penguins have shorter flippers and small body mass than Gentoo.</p>
+</div>
+<div id="adding-labels-and-titles" class="section level2">
+<h2>Adding Labels and Titles</h2>
+<p>By default, the axes labels on a plot are determined by the name of the variable being plotted. However, <strong><code>ggplot2</code></strong> offers lots of customization options, like specifying the axes labels, and adding a title to the plot with relatively few lines of code. We will add more informative x and y axis labels to our plot of proportion of house type by island and also add a title.</p>
+<pre class="r"><code>ggplot(data = penguins, aes(x = flipper_length_mm, y = body_mass_g)) +
+    geom_jitter(aes(color = species), alpha = 0.5) +
+    labs(title=&quot;Body Mass by Flipper Length&quot;,
+         x=&quot;Flipper Length (mm)&quot;,
+         y=&quot;Body Mass (g)&quot;)</code></pre>
+<p><img src="/workshop/2020-06-10-keys/index_files/figure-html/color-by-species-labeled-1.png" width="672" /></p>
+<blockquote>
+<h2 id="exercise-3">Exercise</h2>
+<p>Use what you just learned to create a scatter plot of <code>bill_length_mm</code> by <code>species</code> with the <code>sex</code> showing in different colors. Is this a good way to show this type of data?</p>
+<h2 id="solution-2">Solution</h2>
+</blockquote>
+<pre class="r"><code>ggplot(data = penguins, aes(x = species, y = bill_length_mm)) +
+geom_jitter(aes(color = sex))</code></pre>
+<p>This is not a good way to show this type of data because it is difficult to distinguish between islands.</p>
+</div>
+<div id="boxplot" class="section level2">
+<h2>Boxplot</h2>
+<p>We can use boxplots to visualize the distribution of rooms for each wall type:</p>
+<pre class="r"><code>ggplot(data = penguins, aes(x = species, y = bill_length_mm)) +
+    geom_boxplot()</code></pre>
+<p><img src="/workshop/2020-06-10-keys/index_files/figure-html/boxplot-1.png" width="672" /></p>
+<p>By adding points to a boxplot, we can have a better idea of the number of measurements and of their distribution:</p>
+<pre class="r"><code>ggplot(data = penguins, aes(x = species, y = bill_length_mm)) +
+    geom_boxplot(alpha = 0) +
+    geom_jitter(alpha = 0.5, color = &quot;tomato&quot;)</code></pre>
+<p><img src="/workshop/2020-06-10-keys/index_files/figure-html/boxplot-with-points-1.png" width="672" /></p>
+<p>We can see that Adelie penguins tend to have shorter bills than other species.</p>
+<p>Notice how the boxplot layer is behind the jitter layer? What do you need to change in the code to put the boxplot in front of the points such that it’s not covered?</p>
+<blockquote>
+<h2 id="exercise-4">Exercise</h2>
+<p>Boxplots are useful summaries, but hide the <em>shape</em> of the distribution. For example, if the distribution is bimodal, we would not see it in a boxplot. An alternative to the boxplot is the violin plot, where the shape (of the density of points) is drawn.</p>
+<ul>
+<li>Replace the box plot with a violin plot; see <code>geom_violin()</code>.</li>
+</ul>
+<h2 id="solution-3">Solution</h2>
+</blockquote>
+<pre class="r"><code>ggplot(data = penguins, aes(x = species, y = bill_length_mm)) +
+  geom_violin(alpha = 0) +
+  geom_jitter(alpha = 0.5, color = &quot;tomato&quot;)</code></pre>
+</div>
+<div id="barplots" class="section level2">
+<h2>Barplots</h2>
+<p>Barplots are also useful for visualizing categorical data. By default, <code>geom_bar</code> accepts a variable for x, and plots the number of instances each value of x (in this case, wall type) appears in the dataset.</p>
+<pre class="r"><code>ggplot(data = penguins, aes(x = island)) +
+    geom_bar()</code></pre>
+<p><img src="/workshop/2020-06-10-keys/index_files/figure-html/barplot-1-1.png" width="672" /></p>
+<p>We can use the <code>fill</code> aesthetic for the <code>geom_bar()</code> geom to color bars by the portion of each count that is from each island.</p>
+<pre class="r"><code>ggplot(data = penguins, aes(x = island)) +
+    geom_bar(aes(fill = species))</code></pre>
+<p><img src="/workshop/2020-06-10-keys/index_files/figure-html/barplot-stack-1.png" width="672" /></p>
+<p>This creates a stacked bar chart. These are generally more difficult to read than side-by-side bars. We can separate the portions of the stacked bar that correspond to each island and put them side-by-side by using the <code>position</code> argument for <code>geom_bar()</code> and setting it to “dodge”.</p>
+<pre class="r"><code>ggplot(data = penguins, aes(x = island)) +
+    geom_bar(aes(fill = species), position = &quot;dodge&quot;)</code></pre>
+<p><img src="/workshop/2020-06-10-keys/index_files/figure-html/barplot-dodge-1.png" width="672" /></p>
+</div>
+<div id="ggplot2-themes" class="section level2">
+<h2><strong><code>ggplot2</code></strong> themes</h2>
+<p>In addition to <code>theme_bw()</code>, which changes the plot background to white, <strong><code>ggplot2</code></strong> comes with several other themes which can be useful to quickly change the look of your visualization. The complete list of themes is available at <a href="http://docs.ggplot2.org/current/ggtheme.html" class="uri">http://docs.ggplot2.org/current/ggtheme.html</a>. <code>theme_minimal()</code> and <code>theme_light()</code> are popular, and <code>theme_void()</code> can be useful as a starting point to create a new hand-crafted theme.</p>
+<p>The <a href="https://jrnold.github.io/ggthemes/reference/index.html">ggthemes</a> package provides a wide variety of options (including an Excel 2003 theme). The <a href="https://www.ggplot2-exts.org"><strong><code>ggplot2</code></strong> extensions website</a> provides a list of packages that extend the capabilities of <strong><code>ggplot2</code></strong>, including additional themes.</p>
+</div>
+<div id="customization" class="section level2">
+<h2>Customization</h2>
+<p>Take a look at the <a href="https://www.rstudio.com/wp-content/uploads/2016/11/ggplot2-cheatsheet-2.1.pdf"><strong><code>ggplot2</code></strong> cheat
+sheet</a>, and think of ways you could improve the plot.</p>
+<blockquote>
+<h2 id="exercise-5">Exercise</h2>
+<p>With all of this information in hand, please take another five minutes to either improve one of the plots generated in this exercise or create a beautiful graph of your own.</p>
+<ul>
+<li>See if you can make the bars white with black outline.</li>
+<li>Try using a different color palette (see
+<a href="http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/" class="uri">http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/</a>).</li>
+</ul>
+</blockquote>
+</div>
+</div>

@@ -1,0 +1,126 @@
+---
+title: Coronavirus Unemployment
+author: Kelsey Gonzalez
+date: '2020-05-24'
+slug: coronavirus-unemployment
+image:
+  focal_point: ''
+  preview_only: no
+---
+
+
+
+<p>Which states have been most impacted by unemployment due to the 2020 Coronavirus pandemic? To investigate this, I use the Bureau of Labor Statistics API and some special R ggplot extensions to visualize this relationship with sparklines and small multiples.</p>
+<div id="load-packages" class="section level1">
+<h1>Load Packages</h1>
+<pre class="r"><code>if (!require(&quot;pacman&quot;)) install.packages(&quot;pacman&quot;)</code></pre>
+<pre><code>## Loading required package: pacman</code></pre>
+<pre class="r"><code>pacman::p_load(blscrapeR, geofacet, tidyverse, scales, here)
+
+# For Windows computers, load font devices here: 
+# extrafont::loadfonts(device = &quot;win&quot;, quiet = TRUE)</code></pre>
+<p>Now, scrape the 2020 monthly unemployment data with the Bureau of Labor Statistics API. This isn’t pretty, particularly because each of the “LASST” links is somewhat randomly named and does not import the state name.</p>
+<pre class="r"><code>bls &lt;- 
+  bls_api(&quot;LASST010000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;Alabama&quot;) %&gt;%
+  bind_rows(bls_api(&quot;LASST020000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;Alaska&quot;)) %&gt;%
+  bind_rows(bls_api(&quot;LASST040000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;Arizona&quot;)) %&gt;%
+  bind_rows(bls_api(&quot;LASST050000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;Arkansas&quot;)) %&gt;%
+  bind_rows(bls_api(&quot;LASST060000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;California&quot;)) %&gt;%
+  bind_rows(bls_api(&quot;LASST080000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;Colorado&quot;)) %&gt;%
+  bind_rows(bls_api(&quot;LASST090000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;Connecticut&quot;)) %&gt;%
+  bind_rows(bls_api(&quot;LASST100000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;Delaware&quot;)) %&gt;%
+  bind_rows(bls_api(&quot;LASST110000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;District of Columbia&quot;)) %&gt;%
+  bind_rows(bls_api(&quot;LASST120000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;Florida&quot;)) %&gt;%
+  bind_rows(bls_api(&quot;LASST130000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;Georgia&quot;)) %&gt;%
+  bind_rows(bls_api(&quot;LASST150000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;Hawaii&quot;)) %&gt;%
+  bind_rows(bls_api(&quot;LASST160000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;Idaho&quot;)) %&gt;%
+  bind_rows(bls_api(&quot;LASST170000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;Illinois&quot;)) %&gt;%
+  bind_rows(bls_api(&quot;LASST180000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;Indiana&quot;)) %&gt;%
+  bind_rows(bls_api(&quot;LASST190000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;Iowa&quot;)) %&gt;%
+  bind_rows(bls_api(&quot;LASST200000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;Kansas&quot;)) %&gt;%
+  bind_rows(bls_api(&quot;LASST210000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;Kentucky&quot;)) %&gt;%
+  bind_rows(bls_api(&quot;LASST220000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;Louisiana&quot;)) %&gt;%
+  bind_rows(bls_api(&quot;LASST230000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;Maine&quot;)) %&gt;%
+  bind_rows(bls_api(&quot;LASST240000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;Maryland&quot;)) %&gt;%
+  bind_rows(bls_api(&quot;LASST250000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;Massachusetts&quot;)) %&gt;%
+  bind_rows(bls_api(&quot;LASST260000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;Michigan&quot;)) %&gt;%
+  bind_rows(bls_api(&quot;LASST270000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;Minnesota&quot;)) %&gt;%
+  bind_rows(bls_api(&quot;LASST280000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;Mississippi&quot;)) %&gt;%
+  bind_rows(bls_api(&quot;LASST290000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;Missouri&quot;)) %&gt;%
+  bind_rows(bls_api(&quot;LASST300000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;Montana&quot;)) %&gt;%
+  bind_rows(bls_api(&quot;LASST310000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;Nebraska&quot;)) %&gt;%
+  bind_rows(bls_api(&quot;LASST320000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;Nevada&quot;)) %&gt;%
+  bind_rows(bls_api(&quot;LASST330000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;New_Hampshire&quot;)) %&gt;%
+  bind_rows(bls_api(&quot;LASST340000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;New_Jersey&quot;)) %&gt;%
+  bind_rows(bls_api(&quot;LASST350000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;New_Mexico&quot;)) %&gt;%
+  bind_rows(bls_api(&quot;LASST360000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;New_York&quot;)) %&gt;%
+  bind_rows(bls_api(&quot;LASST370000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;North_Carolina&quot;)) %&gt;%
+  bind_rows(bls_api(&quot;LASST380000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;North_Dakota&quot;)) %&gt;%
+  bind_rows(bls_api(&quot;LASST390000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;Ohio&quot;)) %&gt;%
+  bind_rows(bls_api(&quot;LASST400000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;Oklahoma&quot;)) %&gt;%
+  bind_rows(bls_api(&quot;LASST410000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;Oregon&quot;)) %&gt;%
+  bind_rows(bls_api(&quot;LASST420000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;Pennsylvania&quot;)) %&gt;%
+  bind_rows(bls_api(&quot;LASST440000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;Rhode_Island&quot;)) %&gt;%
+  bind_rows(bls_api(&quot;LASST450000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;South_Carolina&quot;)) %&gt;%
+  bind_rows(bls_api(&quot;LASST460000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;South_Dakota&quot;)) %&gt;%
+  bind_rows(bls_api(&quot;LASST470000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;Tennessee&quot;)) %&gt;%
+  bind_rows(bls_api(&quot;LASST480000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;Texas&quot;)) %&gt;%
+  bind_rows(bls_api(&quot;LASST490000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;Utah&quot;)) %&gt;%
+  bind_rows(bls_api(&quot;LASST500000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;Vermont&quot;)) %&gt;%
+  bind_rows(bls_api(&quot;LASST510000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;Virginia&quot;)) %&gt;%
+  bind_rows(bls_api(&quot;LASST530000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;Washington&quot;)) %&gt;%
+  bind_rows(bls_api(&quot;LASST540000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;West_Virginia&quot;)) %&gt;%
+  bind_rows(bls_api(&quot;LASST550000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;Wisconsin&quot;)) %&gt;%
+  bind_rows(bls_api(&quot;LASST560000000000003&quot;, startyear = 2020, endyear = 2020) %&gt;% mutate(state = &quot;Wyoming&quot;)) %&gt;%
+  dplyr::select(-c(year,period, latest, footnotes,seriesID))
+
+write_csv(bls, path = &quot;bls_July.csv&quot;) # save the data, as you have limited daily queries! </code></pre>
+<p>Alternatively, I already have this data saved, so I’ll import it here instead:</p>
+<pre class="r"><code>bls &lt;- read_csv(&quot;bls_July.csv&quot;) </code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   periodName = col_character(),
+##   value = col_double(),
+##   state = col_character()
+## )</code></pre>
+<pre class="r"><code>bls &lt;- bls %&gt;% 
+  pivot_wider(id_cols = &quot;state&quot;, 
+              names_from = periodName, 
+              values_from = value) %&gt;% # change from long for to wide form
+  rowwise() %&gt;% 
+  mutate(row_max = max(January:June), # calculate maximum unemployment by state
+         row_min = min(January:June), # calculate minimum unemployment by state
+         diff = (row_max - row_min)/100) %&gt;%  # calculate the difference between max and min for color plotting 
+  pivot_longer(cols = -c(state, diff, row_max, row_min), 
+               names_to = &quot;month&quot;, 
+               values_to = &quot;value&quot;) %&gt;% # switch back to long form for plotting 
+  mutate(month = fct_relevel(as.factor(month), 
+                             c(&quot;January&quot;, &quot;February&quot;, &quot;March&quot;, &quot;April&quot;, &quot;May&quot;, &quot;June&quot;)), 
+         # turn the month into a factor and reorder it 
+         state = str_replace(state, &quot;_&quot;, &quot; &quot;), # replace the &quot;_&quot; in the state names with spaces
+         value = value / 100) # to probably render the percents</code></pre>
+<p>And now, plot! Not the faceting over approximate state locations with the <code>geofacet</code> package.</p>
+<pre class="r"><code>unempl_plot &lt;- ggplot(bls, aes(x=month, y = value, group = state)) +
+  geom_line(aes(color = diff), size = 2) +
+  scale_color_gradient(name = &quot;Max Rise in\nUnemployment&quot;,
+                       low = &quot;#fffeea&quot;, high = &quot;#c03728&quot;, 
+                       label = label_percent(accuracy = 1,
+                                             trim = FALSE)) +
+  theme_minimal(base_family = &quot;Roboto Condensed&quot;, base_size = 14) +
+  theme(axis.text = element_blank(),
+        axis.title = element_text(family = &quot;Roboto Condensed Light&quot;),
+        panel.grid = element_blank(),
+        panel.border = element_blank(),
+        legend.position = c(.9,.3),
+        legend.title = element_text(size = 8, family = &quot;Roboto Condensed Light&quot;),
+        strip.text = element_text(size = 12, &quot;Roboto Condensed Light&quot;),
+        legend.text = element_text(size = 10)) +
+  facet_geo(~ state, grid = &quot;us_state_grid2&quot;, label = &quot;code&quot;) +
+  labs(title = &quot;Which states have the sharpest increase in unemployment due to COVID-19?&quot;,
+       caption = &quot;Source: Bureau of Labor Statistics\ngithub.com/kelseygonzalez&quot;,
+       x = &quot;Month of 2020 (January - June)&quot;,
+       y = &quot;Unemployment Rate&quot;) 
+
+ggsave(&quot;bls_unemployment.png&quot;, plot = unempl_plot, width = 10, height = 6)</code></pre>
+<p><img src="%22bls_unemployment.png%22" /></p>
+</div>

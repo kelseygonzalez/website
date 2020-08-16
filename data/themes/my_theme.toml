@@ -1,0 +1,18 @@
+# Theme metadata
+name = "Rose"
+
+# Is theme light or dark?
+light = true
+
+# Primary
+primary = "#52796f" #dark sea foam
+
+# Menu
+menu_primary = "rgb(247, 247, 247)" #white
+menu_text = "#000" #black
+menu_text_active = "rgb(25, 25, 25)" #black
+menu_title = "#000" #black
+
+# Home sections
+home_section_odd = "#FFF"
+home_section_even = "#dce0d9" #light  sea foam

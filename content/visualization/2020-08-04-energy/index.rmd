@@ -1,0 +1,122 @@
+---
+title: European Energy Consumption
+author: Kelsey Gonzalez
+date: '2020-05-24'
+slug: energy
+categories: []
+tags: []
+summary: 'With Tidy Tuesday 2020-08-04, I use a dataset of European energy sources to explore the similarity of country energy sources by source and size. '
+# Featured image
+# To use, place an image named `featured.jpg/png` in your page's folder.
+# Placement options: 1 = Full column width, 2 = Out-set, 3 = Screen-width
+# Focal point options: Smart, Center, TopLeft, Top, TopRight, Left, Right, BottomLeft, Bottom, BottomRight
+# Set `preview_only` to `true` to just use the image for thumbnails.
+image:
+  placement: 1
+  focal_point: "Center"
+  preview_only: false
+---
+
+With Tidy Tuesday 2020-08-04, I use a dataset of European energy sources to explore the similarity of country energy sources by source and size. 
+
+
+load packages 
+```{r}
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(tidytuesdayR, factoextra, ggdendro, dendextend, tidyverse, patchwork)
+```
+
+load and wrangle data
+```{r}
+tuesdata <- tidytuesdayR::tt_load(2020, week = 32)
+
+totals <- tuesdata$energy_types %>% 
+  filter(country != "EL",
+         !is.na(country_name),
+         level != "Level 2") %>% 
+  select(country_name, type, `2016`) %>% 
+  pivot_wider(id_cols = country_name, names_from = type, values_from = `2016`) %>%
+  rowwise() %>% 
+  mutate(total = rowSums(across(`Conventional thermal`:Other)),
+         across(`Conventional thermal`:Other, ~ . / total)) 
+
+props <- totals %>% 
+  select(-total) %>%
+  column_to_rownames("country_name") %>% 
+  as.matrix() %>% 
+  scale()
+
+totals <- totals %>% 
+  select(name = country_name, total)
+```
+
+Perform hierarchical clustering 
+```{r}
+hc1 <- hclust(dist(props), method = "ward.D2" )
+sub_grp <- cutree(hc1, k = 5)
+```
+
+Render plot A:
+```{r}
+plota <- hc1 %>% 
+  as.dendrogram %>% 
+  set("branches_k_color", 
+      value = c("#43aa8b", "#577590","#f3722c","#f94144","#90be6d"), 
+      k = 5) %>% 
+  set("labels_col", 
+      value = c("#43aa8b", "#577590","#f3722c","#f94144","#90be6d"), 
+      k = 5) %>% 
+  set("labels_cex", 0.5) %>% 
+  set("branches_lwd", 0.5) %>% 
+  as.ggdend() %>% 
+  ggplot(horiz = TRUE) +
+  theme(axis.text.y = element_text(size=1)) +
+  theme_minimal(base_family = "Roboto Condensed", base_size = 14) +
+  theme(axis.text = element_blank(),
+        axis.title = element_blank(),
+        panel.grid = element_blank(),
+        panel.border = element_blank(),
+        legend.position = "none")
+
+plota
+```
+
+
+Render plot B:
+```{r}
+clusters <- fviz_cluster(list(data = props, cluster = sub_grp), repel = TRUE, 
+                         outlier.color = "black", ggtheme = theme_minimal())
+
+plotb <- clusters$data %>% 
+  left_join(totals) %>% 
+  ggplot(aes(x, y, color = cluster)) +
+  geom_point(aes(size = total), alpha = 0.5) +
+  ggrepel::geom_text_repel(aes(label = name), size = 2) +
+  scale_color_manual(values = c("#f94144", "#f3722c", "#90be6d", "#577590", "#43aa8b")) +
+  theme_minimal() +
+  theme(axis.text = element_blank(),
+        axis.title = element_blank(),
+        panel.grid = element_blank(),
+        panel.border = element_blank(),
+        legend.position = "none")
+
+plotb
+```
+
+
+Combine plots A & B with patchwork:
+```{r}
+plota + plotb + plot_annotation(
+  title = 'How similar are European countries in energy usage and source?',
+  subtitle = '2016 European energy usage clustered by source concentration',
+  caption = 'Data: Eurostat Energy \n Design and Analysis by @KelseyGonzalez') +
+  theme_minimal(base_family = "Roboto Condensed", base_size = 14) +
+  theme(axis.text = element_blank(),
+        axis.title = element_blank(),
+        panel.grid = element_blank(),
+        panel.border = element_blank(),
+        legend.position = "none")
+
+# save plot
+ggsave("2020-08-04.png")
+```

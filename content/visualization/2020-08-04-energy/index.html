@@ -1,0 +1,113 @@
+---
+title: European Energy Consumption
+author: Kelsey Gonzalez
+date: '2020-05-24'
+slug: energy
+categories: []
+tags: []
+summary: 'With Tidy Tuesday 2020-08-04, I use a dataset of European energy sources to explore the similarity of country energy sources by source and size. '
+# Featured image
+# To use, place an image named `featured.jpg/png` in your page's folder.
+# Placement options: 1 = Full column width, 2 = Out-set, 3 = Screen-width
+# Focal point options: Smart, Center, TopLeft, Top, TopRight, Left, Right, BottomLeft, Bottom, BottomRight
+# Set `preview_only` to `true` to just use the image for thumbnails.
+image:
+  placement: 1
+  focal_point: "Center"
+  preview_only: false
+---
+
+
+
+<p>With Tidy Tuesday 2020-08-04, I use a dataset of European energy sources to explore the similarity of country energy sources by source and size.</p>
+<p>load packages</p>
+<pre class="r"><code>if (!require(&quot;pacman&quot;)) install.packages(&quot;pacman&quot;)</code></pre>
+<pre><code>## Loading required package: pacman</code></pre>
+<pre class="r"><code>pacman::p_load(tidytuesdayR, factoextra, ggdendro, dendextend, tidyverse, patchwork)</code></pre>
+<p>load and wrangle data</p>
+<pre class="r"><code>tuesdata &lt;- tidytuesdayR::tt_load(2020, week = 32)</code></pre>
+<pre><code>## --- Compiling #TidyTuesday Information for 2020-08-04 ----</code></pre>
+<pre><code>## --- There are 2 files available ---</code></pre>
+<pre><code>## --- Starting Download ---</code></pre>
+<pre><code>## 
+##  Downloading file 1 of 2: `energy_types.csv`
+##  Downloading file 2 of 2: `country_totals.csv`</code></pre>
+<pre><code>## --- Download complete ---</code></pre>
+<pre class="r"><code>totals &lt;- tuesdata$energy_types %&gt;% 
+  filter(country != &quot;EL&quot;,
+         !is.na(country_name),
+         level != &quot;Level 2&quot;) %&gt;% 
+  select(country_name, type, `2016`) %&gt;% 
+  pivot_wider(id_cols = country_name, names_from = type, values_from = `2016`) %&gt;%
+  rowwise() %&gt;% 
+  mutate(total = rowSums(across(`Conventional thermal`:Other)),
+         across(`Conventional thermal`:Other, ~ . / total)) 
+
+props &lt;- totals %&gt;% 
+  select(-total) %&gt;%
+  column_to_rownames(&quot;country_name&quot;) %&gt;% 
+  as.matrix() %&gt;% 
+  scale()
+
+totals &lt;- totals %&gt;% 
+  select(name = country_name, total)</code></pre>
+<p>Perform hierarchical clustering</p>
+<pre class="r"><code>hc1 &lt;- hclust(dist(props), method = &quot;ward.D2&quot; )
+sub_grp &lt;- cutree(hc1, k = 5)</code></pre>
+<p>Render plot A:</p>
+<pre class="r"><code>plota &lt;- hc1 %&gt;% 
+  as.dendrogram %&gt;% 
+  set(&quot;branches_k_color&quot;, 
+      value = c(&quot;#43aa8b&quot;, &quot;#577590&quot;,&quot;#f3722c&quot;,&quot;#f94144&quot;,&quot;#90be6d&quot;), 
+      k = 5) %&gt;% 
+  set(&quot;labels_col&quot;, 
+      value = c(&quot;#43aa8b&quot;, &quot;#577590&quot;,&quot;#f3722c&quot;,&quot;#f94144&quot;,&quot;#90be6d&quot;), 
+      k = 5) %&gt;% 
+  set(&quot;labels_cex&quot;, 0.5) %&gt;% 
+  set(&quot;branches_lwd&quot;, 0.5) %&gt;% 
+  as.ggdend() %&gt;% 
+  ggplot(horiz = TRUE) +
+  theme(axis.text.y = element_text(size=1)) +
+  theme_minimal(base_family = &quot;Roboto Condensed&quot;, base_size = 14) +
+  theme(axis.text = element_blank(),
+        axis.title = element_blank(),
+        panel.grid = element_blank(),
+        panel.border = element_blank(),
+        legend.position = &quot;none&quot;)
+
+plota</code></pre>
+<p><img src="/visualization/2020-08-04-energy/index_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>Render plot B:</p>
+<pre class="r"><code>clusters &lt;- fviz_cluster(list(data = props, cluster = sub_grp), repel = TRUE, 
+                         outlier.color = &quot;black&quot;, ggtheme = theme_minimal())
+
+plotb &lt;- clusters$data %&gt;% 
+  left_join(totals) %&gt;% 
+  ggplot(aes(x, y, color = cluster)) +
+  geom_point(aes(size = total), alpha = 0.5) +
+  ggrepel::geom_text_repel(aes(label = name), size = 2) +
+  scale_color_manual(values = c(&quot;#f94144&quot;, &quot;#f3722c&quot;, &quot;#90be6d&quot;, &quot;#577590&quot;, &quot;#43aa8b&quot;)) +
+  theme_minimal() +
+  theme(axis.text = element_blank(),
+        axis.title = element_blank(),
+        panel.grid = element_blank(),
+        panel.border = element_blank(),
+        legend.position = &quot;none&quot;)</code></pre>
+<pre><code>## Joining, by = &quot;name&quot;</code></pre>
+<pre class="r"><code>plotb</code></pre>
+<p><img src="/visualization/2020-08-04-energy/index_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>Combine plots A &amp; B with patchwork:</p>
+<pre class="r"><code>plota + plotb + plot_annotation(
+  title = &#39;How similar are European countries in energy usage and source?&#39;,
+  subtitle = &#39;2016 European energy usage clustered by source concentration&#39;,
+  caption = &#39;Data: Eurostat Energy \n Design and Analysis by @KelseyGonzalez&#39;) +
+  theme_minimal(base_family = &quot;Roboto Condensed&quot;, base_size = 14) +
+  theme(axis.text = element_blank(),
+        axis.title = element_blank(),
+        panel.grid = element_blank(),
+        panel.border = element_blank(),
+        legend.position = &quot;none&quot;)</code></pre>
+<p><img src="/visualization/2020-08-04-energy/index_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<pre class="r"><code># save plot
+ggsave(&quot;2020-08-04.png&quot;)</code></pre>
+<pre><code>## Saving 7 x 5 in image</code></pre>
