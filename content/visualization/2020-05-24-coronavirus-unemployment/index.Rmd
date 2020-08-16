@@ -3,6 +3,7 @@ title: Coronavirus Unemployment
 author: Kelsey Gonzalez
 date: '2020-05-24'
 slug: coronavirus-unemployment
+summary: 'Which states have been most impacted by unemployment due to the 2020 Coronavirus pandemic?'
 image:
   focal_point: ''
   preview_only: no

@@ -1,0 +1,147 @@
+---
+title: "New Immigrant Destinations"
+author: "Kelsey Gonzalez"
+date: '2020-08-16'
+slug: migration
+categories: []
+tags: []
+summary: 'Using data from the Migrant Border Crossing Project (Slack, Martínez, and
+  Whiteford), I map out how Mexican origins cross the US border at different points
+  en route to new destinations. '
+image:
+  placement: 1
+  focal_point: Center
+  preview_only: no
+---
+
+
+
+<p>Using data from the Migrant Border Crossing Project (Slack, Martínez, and Whiteford), I map out how Mexican origins cross the US border at different points en route to new destinations. This visualization was created to support the new publication of <a href="http://doi.org/10.1080/00380253.2020.1733448">“Destination Intentions of Unauthorized Mexican Border Crossers and Familial Ties to US Citizens”</a> at <em>The Sociological Quarterly</em>.</p>
+<pre class="r"><code>knitr::opts_chunk$set(echo = TRUE, 
+                      results = &quot;hide&quot;,
+                      warning = FALSE,
+                      message = FALSE)
+
+if (!require(&quot;pacman&quot;)) install.packages(&quot;pacman&quot;)</code></pre>
+<pre><code>## Loading required package: pacman</code></pre>
+<pre class="r"><code>pacman::p_load(tidyverse, ggalluvial, readxl, ggrepel)</code></pre>
+<div id="load-data" class="section level4">
+<h4>load data</h4>
+<pre class="r"><code>df &lt;- readxl::read_excel(&quot;MBCS II_geo_3.xls&quot;) %&gt;%
+  drop_na() %&gt;%
+  mutate(across(state_mex:dest_type_us, ~ as.factor(.)),
+         across(state_mex:census_region_us, ~ fct_recode(., NULL = &quot;Don&#39;t Know&quot;)),
+         region_mex = fct_relevel(region_mex,
+                                  c(&quot;North&quot;, &quot;Traditional&quot;, &quot;Central&quot;, &quot;South&quot;)),
+         sector_cross = fct_relevel(sector_cross,
+                                    c(&quot;San Diego&quot;,&quot;El Centro&quot;,&quot;Yuma&quot;, &quot;Tucson&quot;,
+                                      &quot;El Paso&quot;,&quot;Marfa&quot;,&quot;Del Rio&quot;,&quot;Laredo&quot;,&quot;McAllen&quot;)),
+         dest_type_us = fct_relevel(dest_type_us,
+                                    c(&quot;Traditional&quot;,&quot;Re-Emerging&quot;,&quot;New Destination&quot;)),
+         sector_cross = fct_recode(sector_cross, &quot;Rio Grande&quot; = &quot;McAllen&quot;)) %&gt;%
+  select(region_mex, sector_cross, dest_type_us) %&gt;%
+  drop_na()</code></pre>
+<p>add descriptors to labels</p>
+<pre class="r"><code>mex_states &lt;- tibble::tribble(
+  ~state_mex, ~state_mex_abbreviation, ~state_mex_code, ~state_mex_3code,
+  &quot;Aguascalientes&quot;, &quot;Ags.&quot;,&quot;AG&quot;,&quot;AGU&quot;,
+  &quot;Baja California&quot;, &quot;B.C.&quot;,&quot;BC&quot;,&quot;BCN&quot;,
+  &quot;Baja California Sur&quot;, &quot;B.C.S.&quot;,&quot;BS&quot;,&quot;BCS&quot;,
+  &quot;Campeche&quot;,&quot;Camp.&quot;,&quot;CM&quot;,&quot;CAM&quot;,
+  &quot;Chiapas&quot;,&quot;Chis.&quot;,&quot;CS&quot;,&quot;CHP&quot;,
+  &quot;Chihuahua&quot;,&quot;Chih.&quot;,&quot;CH&quot;,&quot;CHH&quot;,
+  &quot;Coahuila&quot;,&quot;Coah.&quot;,&quot;CO&quot;,&quot;COA&quot;,
+  &quot;Colima&quot;, &quot;Col.&quot;,&quot;CL&quot;,&quot;COL&quot;,
+  &quot;DF&quot;, &quot;CDMX&quot;,&quot;DF&quot;,&quot;CMX&quot;,
+  &quot;Durango&quot;, &quot;Dgo.&quot;,&quot;DG&quot;,&quot;DUR&quot;,
+  &quot;Guanajuato&quot;, &quot;Gto.&quot;,&quot;GT&quot;,&quot;GUA&quot;,
+  &quot;Guerrero&quot;, &quot;Gro.&quot;,&quot;GR&quot;,&quot;GRO&quot;,
+  &quot;Hidalgo&quot;, &quot;Hgo.&quot;,&quot;HG&quot;,&quot;HID&quot;,
+  &quot;Jalisco&quot;, &quot;Jal.&quot;,&quot;JA&quot;,&quot;JAL&quot;,
+  &quot;Mexico&quot;,&quot;Edomex.&quot;,&quot;EM&quot;,&quot;MEX&quot;,
+  &quot;Michoacan&quot;,&quot;Mich.&quot;,&quot;MI&quot;,&quot;MIC&quot;,
+  &quot;Morelos&quot;, &quot;Mor.&quot;,&quot;MO&quot;,&quot;MOR&quot;,
+  &quot;Nayarit&quot;, &quot;Nay.&quot;,&quot;NA&quot;,&quot;NAY&quot;,
+  &quot;Nuevo Leon&quot;, &quot;N.L.&quot;,&quot;NL&quot;,&quot;NLE&quot;,
+  &quot;Oaxaca&quot;, &quot;Oax.&quot;,&quot;OA&quot;,&quot;OAX&quot;,
+  &quot;Puebla&quot;, &quot;Pue.&quot;,&quot;PU&quot;,&quot;PUE&quot;,
+  &quot;Queretaro&quot;, &quot;Qro.&quot;,&quot;QT&quot;,&quot;QUE&quot;,
+  &quot;Quintana Roo&quot;,&quot;Q. Roo.&quot;,&quot;QR&quot;,&quot;ROO&quot;,
+  &quot;San Luis Potosi&quot;, &quot;S.L.P.&quot;,&quot;SL&quot;,&quot;SLP&quot;,
+  &quot;Sinaloa&quot;, &quot;Sin.&quot;,&quot;SI&quot;,&quot;SIN&quot;,
+  &quot;Sonora&quot;, &quot;Son.&quot;,&quot;SO&quot;,&quot;SON&quot;,
+  &quot;Tabasco&quot;, &quot;Tab.&quot;,&quot;TB&quot;,&quot;TAB&quot;,
+  &quot;Tamaulipas&quot;, &quot;Tamps.&quot;,&quot;TM&quot;,&quot;TAM&quot;,
+  &quot;Tlaxcala&quot;,&quot;Tlax.&quot;,&quot;TL&quot;,&quot;TLA&quot;,
+  &quot;Veracruz&quot;, &quot;Ver.&quot;,&quot;VE&quot;,&quot;VER&quot;,
+  &quot;Yucatan&quot;, &quot;Yuc.&quot;,&quot;YU&quot;,&quot;YUC&quot;,
+  &quot;Zacatecas&quot;, &quot;Zac.&quot;,&quot;ZA&quot;,&quot;ZAC&quot;
+)
+
+add_ex &lt;- function(state){
+  df &lt;- readxl::read_excel(&quot;MBCS II_geo_3.xls&quot;)  %&gt;%
+    left_join(mex_states, by = &quot;state_mex&quot;) %&gt;%
+    count(region_mex, state_mex, state_mex_3code) %&gt;%
+    filter(region_mex == state) %&gt;%
+    arrange(desc(n)) %&gt;%
+    top_n(5, n) %&gt;%
+    pull(state_mex_3code)
+  string &lt;- str_wrap(
+    paste0(
+      &quot;(e.g. &quot;,
+      paste(df, collapse = &quot;, &quot;),
+      &quot;)&quot;),
+    18)
+  df &lt;- paste0(state,&quot;\n&quot;, string)
+  return(df)
+}
+
+North &lt;- add_ex(&quot;North&quot;)
+Traditional &lt;- add_ex(&quot;Traditional&quot;)
+Central &lt;- add_ex(&quot;Central&quot;)
+South &lt;- add_ex(&quot;South&quot;)</code></pre>
+<p>Add in labeled names to dataset, reorder the <code>region_mex</code> factors from North to South.</p>
+<pre class="r"><code>df &lt;- df %&gt;%
+  mutate(region_mex_named = as.character(region_mex),
+         region_mex_named = case_when(region_mex_named == &quot;North&quot; ~ North,
+                                      region_mex_named == &quot;Traditional&quot; ~ Traditional,
+                                      region_mex_named == &quot;Central&quot; ~ Central,
+                                      region_mex_named == &quot;South&quot; ~ South),
+         region_mex_order = case_when(region_mex == &quot;North&quot; ~ 1,
+                                      region_mex == &quot;Traditional&quot; ~ 2,
+                                      region_mex == &quot;Central&quot; ~ 3,
+                                      region_mex == &quot;South&quot; ~ 4),
+         region_mex_named = fct_reorder(region_mex_named, region_mex_order),
+         dest_type_us_named = fct_recode(dest_type_us,
+                                         &quot;Traditional\n(e.g. CA, TX,\nAZ, IL, NM)&quot; = &quot;Traditional&quot;,
+                                         &quot;Re-emerging\n(e.g. CO, WA,\nNV, OK, OR)&quot; =  &quot;Re-Emerging&quot;,
+                                         &quot;New\n(e.g. NY, FL,\nNC, GA, TN)&quot; = &quot;New Destination&quot;)) %&gt;%
+  select(region_mex_named, sector_cross, dest_type_us_named)</code></pre>
+<p>And, plot!</p>
+<pre class="r"><code>ggplot(data = df,
+       aes(axis1 = region_mex_named,
+           axis2 = sector_cross,
+           axis4 = dest_type_us_named)) +
+  scale_x_discrete(limits = c(&quot;Origin in\nMexico&quot;,
+                              &quot;Border Patrol\nSector of Crossing&quot;,
+                              &quot;Destination\nType&quot;),
+                   expand = c(.1, .05)) +
+  geom_alluvium(aes(fill = region_mex_named), show.legend = FALSE, stat=&#39;flow&#39;) +
+  geom_stratum() +
+  geom_text(stat = &quot;stratum&quot;, family = &quot;Roboto Condensed&quot;,aes(label = after_stat(stratum))) +
+  theme_void(base_family = &quot;Roboto Condensed&quot;, base_size = 14) +
+  theme(axis.text.x = element_text(),
+        plot.margin = margin(10, 10, 10, 10)) +
+  scale_fill_manual(values = c(&quot;#f94144&quot;, #red
+                               &quot;#90be6d&quot;, #green
+                               &quot;#f9c74f&quot;, #yellow
+                               &quot;#70688d&quot; #purple
+                               )) +
+  ggtitle(&quot;Where were they migrating?&quot;,
+          subtitle = &quot;Communities of origin, crossing points, and destination intentions among unauthorized Mexican migrants&quot;) +
+  labs (caption = &quot;Source: Migrant Border Crossing Study II (Co-PIs Slack, Martínez, and Whiteford)
+                    DOI: 10.1080/00380253.2020.1733448
+                    Graphic designed by Kelsey E. Gonzalez&quot;)</code></pre>
+<p><img src="/visualization/2020-08-16-MBCP-alluvial/index_files/figure-html/plot-1.png" width="1152" /></p>
+<pre class="r"><code>ggsave(&quot;featured.png&quot;, width = 10, height = 8)</code></pre>
+</div>

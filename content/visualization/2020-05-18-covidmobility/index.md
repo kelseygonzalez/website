@@ -3,6 +3,7 @@ title: Coronavirus Mobility
 author: Kelsey Gonzalez
 date: '2020-04-15'
 slug: mobility
+summary: 'Which states decreased their movement due to COVID-19 and by how much?'
 image:
   focal_point: ''
 preview_only: no
