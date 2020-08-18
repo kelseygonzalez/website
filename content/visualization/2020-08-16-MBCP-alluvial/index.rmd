@@ -2,7 +2,7 @@
 title: "New Immigrant Destinations"
 author: "Kelsey Gonzalez"
 date: '2020-08-16'
-slug: migration
+slug: mbcp
 categories: []
 tags: []
 summary: 'Using data from the Migrant Border Crossing Project (Slack, Martínez, and
@@ -12,6 +12,8 @@ image:
   placement: 1
   focal_point: Center
   preview_only: no
+editor_options: 
+  chunk_output_type: inline
 ---
 
 Using data from the Migrant Border Crossing Project (Slack, Martínez, and Whiteford), I map out how Mexican origins cross the US border at different points en route to new destinations. This visualization was created to support the new publication of ["Destination Intentions of Unauthorized Mexican Border Crossers and Familial Ties to US Citizens"](http://doi.org/10.1080/00380253.2020.1733448) at *The Sociological Quarterly*.
@@ -39,10 +41,17 @@ df <- readxl::read_excel("MBCS II_geo_3.xls") %>%
          sector_cross = fct_relevel(sector_cross,
                                     c("San Diego","El Centro","Yuma", "Tucson",
                                       "El Paso","Marfa","Del Rio","Laredo","McAllen")),
+         census_div_us = fct_relevel(census_div_us,
+                                     c("Pacific","Mountain", "West South Central",
+                                       "West North Central", "East South Central",
+                                       "East North Cenral",  "South Atlantic",
+                                       "Mid-Atlantic", "New England")),
+         census_region_us = fct_relevel(census_region_us,
+                                        c("West", "South", "Midwest", "Northeast")),
          dest_type_us = fct_relevel(dest_type_us,
                                     c("Traditional","Re-Emerging","New Destination")),
          sector_cross = fct_recode(sector_cross, "Rio Grande" = "McAllen")) %>%
-  select(region_mex, sector_cross, dest_type_us) %>%
+  select(region_mex, sector_cross, dest_type_us, census_div_us, census_region_us) %>%
   drop_na()
 
 ```
@@ -129,11 +138,11 @@ df <- df %>%
                                          "Traditional\n(e.g. CA, TX,\nAZ, IL, NM)" = "Traditional",
                                          "Re-emerging\n(e.g. CO, WA,\nNV, OK, OR)" =  "Re-Emerging",
                                          "New\n(e.g. NY, FL,\nNC, GA, TN)" = "New Destination")) %>%
-  select(region_mex_named, sector_cross, dest_type_us_named)
+  select(region_mex_named, sector_cross, dest_type_us_named, census_div_us, census_region_us)
 ```
 
 And, plot! 
-```{r plot, fig.dim = c(12, 8)}
+```{r plot1, fig.dim = c(12, 8)}
 ggplot(data = df,
        aes(axis1 = region_mex_named,
            axis2 = sector_cross,
@@ -142,24 +151,29 @@ ggplot(data = df,
                               "Border Patrol\nSector of Crossing",
                               "Destination\nType"),
                    expand = c(.1, .05)) +
+    scale_y_continuous(expand = c(0,0)) +
   geom_alluvium(aes(fill = region_mex_named), show.legend = FALSE, stat='flow') +
   geom_stratum() +
   geom_text(stat = "stratum", family = "Roboto Condensed",aes(label = after_stat(stratum))) +
-  theme_void(base_family = "Roboto Condensed", base_size = 14) +
-  theme(axis.text.x = element_text(),
-        plot.margin = margin(10, 10, 10, 10)) +
   scale_fill_manual(values = c("#f94144", #red
                                "#90be6d", #green
                                "#f9c74f", #yellow
                                "#70688d" #purple
                                )) +
   ggtitle("Where were they migrating?",
-          subtitle = "Communities of origin, crossing points, and destination intentions among unauthorized Mexican migrants") +
-  labs (caption = "Source: Migrant Border Crossing Study II (Co-PIs Slack, Martínez, and Whiteford)
-                    DOI: 10.1080/00380253.2020.1733448
-                    Graphic designed by Kelsey E. Gonzalez")
+          subtitle = "Communities of origin, crossing points, and destination intentions among unauthorized Mexican migrants (2009-2012)") +
+  labs(caption = c("
+                   Designed by KelseyGonzalez.github.io", 
+                    "
+Source: Migrant Border Crossing Study II (Co-PIs Slack, Martínez, and Whiteford)
+See also: Martínez-Schuldt and Martínez 2020 (DOI: 10.1080/00380253.2020.1733448)")) + 
+      theme_minimal(base_family = "Roboto Condensed", base_size = 12) +
+  theme(axis.text.y = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid = element_blank(),
+        plot.margin = margin(10, 10, 10, 10),
+        plot.caption = element_text(hjust=c(1, 0))) 
+
 
 ggsave("featured.png", width = 10, height = 8)
 ```
-
-
