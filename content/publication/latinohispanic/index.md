@@ -3,24 +3,24 @@ abstract: Despite different origins, “Hispanic” and “Latino” are often u
 authors:
 - Daniel E. Martínez
 - admin
-date: "2020-08-08T00:00:00Z"
-doi: ""
+date: "2020-08-21T00:00:00Z"
+doi: "10.1177/0731121420950371"
 featured: false
 image:
   focal_point: ""
   preview_only: false
 projects: []
 publication: '*Sociological Perspectives, 0*(0)'
-publication_short: "*Sociological Perspectives*, Forthcoming"
+publication_short: "*Sociological Perspectives*, Online First"
 publication_types:
 - "2"
-publishDate: "2020-08-08T00:00:00Z"
+publishDate: "2020-08-21T00:00:00Z"
 tags:
 - Source Themes
 title: "Latino or Hispanic?: The Sociodemographic Correlates of Panethnic Label Preferences among US Latinos/Hispanics"
-url_code: ""
+url_code: "https://kelseygonzalez.github.io/publication/latinohispanic/"
 url_dataset: "https://www.pewresearch.org/hispanic/dataset/2013-national-survey-of-latinos/"
-url_pdf: ""
+url_pdf: "/files/latinohispanic.pdf"
 url_poster: ""
 url_project: ""
 url_slides: ""
