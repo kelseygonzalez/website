@@ -18,7 +18,7 @@ publishDate: "2020-08-21T00:00:00Z"
 tags:
 - Source Themes
 title: "Latino or Hispanic?: The Sociodemographic Correlates of Panethnic Label Preferences among US Latinos/Hispanics"
-url_code: "https://kelseygonzalez.github.io/publication/latinohispanic/"
+url_code: "https://github.com/kelseygonzalez/latino-hispanic"
 url_dataset: "https://www.pewresearch.org/hispanic/dataset/2013-national-survey-of-latinos/"
 url_pdf: "/files/latinohispanic.pdf"
 url_poster: ""
