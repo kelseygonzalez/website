@@ -3,7 +3,7 @@ abstract: The routine human rights abuses and due process violations of unaccomp
 authors:
 - Kiera Coulter
 - Samantha Sabo
-- Daniel E. Martínez
+- Daniel E. Martinez
 - Katelyn Chisholm
 - Admin
 - Sonia Bass Zavala
@@ -18,8 +18,8 @@ image:
   focal_point: ""
   preview_only: false
 projects: []
-publication: '*Journal on Migration and Human Security, 0*(0)'
-publication_short: "*Journal on Migration and Human Security*, Online First"
+publication: '*Journal on Migration and Human Security, 8*(2):96-110'
+publication_short: "*Journal on Migration and Human Security*, 8(2):96-110"
 publication_types:
 - "2"
 publishDate: "2020-04-22T00:00:00Z"

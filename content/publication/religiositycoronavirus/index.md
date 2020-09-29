@@ -11,8 +11,8 @@ image:
   focal_point: ""
   preview_only: false
 projects: []
-publication: "*Journal of Religion and Health, 1*(1)"
-publication_short: "*Journal of Religion and Health*, Online First"
+publication: "*Journal of Religion and Health*, 59:2229-2242"
+publication_short: "*Journal of Religion and Health*, 59:2229-2242"
 publication_types: 
   - "2"
 publishDate: "2020-07-04T00:00:00Z"
