@@ -7,12 +7,12 @@ education:
   - course: PhD in Sociology
     institution: University of Arizona
     year: Expected in 2022
-  - course: Certificate in Computational Social Science
+  - course: Grad Certificate in Computational Social Science
     institution: University of Arizona
     year: 2020
   - course: MA in Sociology
     institution: University of Arizona
-    year: 2018
+    year: 2019
   - course: MPhil in Race, Ethnicity, and Conflict
     institution: Trinity College, Dublin
     year: 2015
@@ -51,7 +51,7 @@ I'm a PhD Candidate in the School of Sociology at the University of Arizona. My 
 
 I have a strong methodological background following my extensive quantitative and computational methods training at the University of Arizona. I have researched Latina/o Panethnicty, white fragility, and population health behaviors during  Covid-19, leading to publications in in *Ethnic and Racial Studies*, *Sociological Perspectives*, *Journal on Migration and Human Security*, and the *Journal of Religion and Health*.
 
-Currently, I manage the survey data pipeline for a project supported by the [U.S. Department of Defense Minerva Research Initiative](https://minerva.defense.gov/) analyzing non-state actor governance in Colombia and Afghanistan. I am also building a survey investigating network resource activation supported by the [Summer Institutes in Computational Social Science](https://sicss.io/). Additionally, I am investigating racial disparities in happiness, textual networks of weightloss, convergent validity and correspondence of Google Trends, diffusion of misinformation in population networks, and developing visualization tools for multinomial logistic regression. 
+Currently, I manage the survey data pipeline for a project supported by the [U.S. Department of Defense Minerva Research Initiative](https://minerva.defense.gov/) analyzing non-state actor governance in Colombia and Afghanistan. I am also building a survey investigating network resource activation supported by the [Summer Institutes in Computational Social Science](https://sicss.io/). Additionally, I am investigating racial disparities in happiness, textual networks of weightloss discourse, convergent validity and correspondence of Google Trends, diffusion of misinformation in population networks, and developing visualization tools for multinomial logistic regression. 
 
 I am a [Certified RStudio Trainer](https://education.rstudio.com/trainers/) and a [Carpentries instructor](https://carpentries.org/instructors/). Locally, I am involved with data science education at the University of Arizona as a [Senior Data Science Ambassador](https://datascience.arizona.edu/ambassadors) for the College of Social and Behavioral Sciences and a [Steering Committee member](http://researchbazaar.arizona.edu/) for Research Bazaar Ariona. 
 

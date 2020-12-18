@@ -4,8 +4,8 @@ authors:
   - "Terrence D. Hill"
   - admin
   - "Andrew P. Davis"
-date: "2020-11-06T00:00:00Z"
-doi: 
+date: "2020-12-17T00:00:00Z"
+doi: 10.1177/0731121420979700
 featured: false
 image: 
   focal_point: ""
@@ -15,12 +15,12 @@ publication: "*Sociological Perspectives*, Forthcoming"
 publication_short: "*Sociological Perspectives*, Forthcoming"
 publication_types: 
   - "2"
-publishDate: "2020-07-04T00:00:00Z"
+publishDate: "2020-12-17T00:00:00Z"
 summary: ""
 title: "The Nastiest Question: Does Population Mobility vary by State Political Ideology during the Novel Coronavirus (COVID-19) Pandemic?"
 url_code: ""
 url_dataset: ""
-url_pdf: ""
+url_pdf: "/files/politicscoronavirus.pdf"
 url_poster: ""
 url_project: ""
 url_slides: ""
