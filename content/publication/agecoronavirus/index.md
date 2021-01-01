@@ -19,22 +19,22 @@ authors:
   - admin
   - "Laura Upenieks"
 date: "2020-12-06T00:00:00Z"
-doi: 
+doi: 10.1177/0898264320984016
 featured: false
 image: 
   focal_point: ""
   preview_only: false
 projects: []
-publication: "*Journal of Aging and Health*, Forthcoming"
-publication_short: "*Journal of Aging and Health*, Forthcoming"
+publication: "*Journal of Aging and Health*, Online First"
+publication_short: "*Journal of Aging and Health*, Online First"
 publication_types: 
   - "2"
-publishDate: "2020-12-06T00:00:00Z"
+publishDate: "2021-01-01T00:00:00Z"
 summary: ""
 title: "Love thy Aged? A State-Level Analysis of Religiosity and Mobility in Aging Populations during the Novel Coronavirus (COVID-19) Pandemic"
 url_code: ""
 url_dataset: ""
-url_pdf: ""
+url_pdf: "/files/agecoronavirus.pdf"
 url_poster: ""
 url_project: ""
 url_slides: ""

@@ -11,8 +11,8 @@ image:
   focal_point: ""
   preview_only: false
 projects: []
-publication: "*Sociological Perspectives*, Forthcoming"
-publication_short: "*Sociological Perspectives*, Forthcoming"
+publication: "*Sociological Perspectives*, Online First"
+publication_short: "*Sociological Perspectives*, Online First"
 publication_types: 
   - "2"
 publishDate: "2020-12-17T00:00:00Z"
