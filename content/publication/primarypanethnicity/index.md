@@ -10,8 +10,8 @@ image:
   focal_point: ""
   preview_only: false
 projects: []
-publication: "*Ethnic and Racial Studies, 0*(0)"
-publication_short: "*Ethnic and Racial Studies*, Online First"
+publication: "*Ethnic and Racial Studies, 44*(05)"
+publication_short: "*Ethnic and Racial Studies, 44*(05)"
 publication_types: 
   - "2"
 publishDate: "2020-04-18T00:00:00Z"
