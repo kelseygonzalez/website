@@ -30,4 +30,4 @@ Learn more here: https://new.library.arizona.edu/news/2020-data-visualization-ch
 
 
 
-![](/img/covidmobility.gif)
+![](/img/covid_mobility.png)
