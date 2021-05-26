@@ -25,8 +25,8 @@ image:
   focal_point: ""
   preview_only: false
 projects: []
-publication: "*Journal of Aging and Health*, Online First"
-publication_short: "*Journal of Aging and Health*, Online First"
+publication: "*Journal of Aging and Health*, 33(5-6):377-386."
+publication_short: "*Journal of Aging and Health*, 33(5-6):377-386."
 publication_types: 
   - "2"
 publishDate: "2021-01-01T00:00:00Z"

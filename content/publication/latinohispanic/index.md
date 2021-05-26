@@ -10,8 +10,8 @@ image:
   focal_point: ""
   preview_only: false
 projects: []
-publication: '*Sociological Perspectives, 0*(0)'
-publication_short: "*Sociological Perspectives*, Online First"
+publication: '*Sociological Perspectives*, 64(3):365–386'
+publication_short: "*Sociological Perspectives*, 64(3):365–386"
 publication_types:
 - "2"
 publishDate: "2020-08-21T00:00:00Z"

@@ -1,10 +1,8 @@
 options(blogdown.publishDir = '../kelseygonzalez.github.io')
 
-
-
-options(blogdown.hugo.version = "0.79.0", # fix Hugo version
+options(blogdown.hugo.version = "0.83.1", # fix Hugo version
         blogdown.knit.on_save = FALSE, 
-        blogdown.files_filter = blogdown:::md5sum_filter,  # fixes date issues
+        blogdown.files_filter = blogdown:::filter_md5sum,  # fixes date issues
         # other nice to haves!
         blogdown.title_case = TRUE,
         blogdown.initial_files = FALSE,
