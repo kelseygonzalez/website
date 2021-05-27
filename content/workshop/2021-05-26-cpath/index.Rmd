@@ -40,6 +40,12 @@ Day 2 will cover special variable types and advanced creation of new variables. 
 
 Day 3 will cover relational data and joins in addition to more advanced and cutting edge dplyr functions like `across`, `colwise`, `rowwise`. After diving into `purrr` for iteration, we will dive into case studies. 
 
+<div class="shareagain" style="min-width:300px;margin:1em auto;">
+  <iframe src="https://kelseygonzalez.github.io/cpath-training/day-03-advanced.html" width="500" height="300" style="border:2px solid currentColor;" loading="lazy" allowfullscreen></iframe>
+  <script>fitvids('.shareagain', {players: 'iframe'});</script>
+</div>
+
+
 # Prework
 
 We will use Rstudio desktop for this workshop. You're also welcome to utilize Rstudio cloud.
@@ -55,12 +61,13 @@ install.packages("tidyverse")
 install.packages("NHANES")
 install.packages("janitor")
 install.packages("gapminder")
+install.packages("glue")
 
 ```
 
 # Links
 
 - Link to this website: [https://bit.ly/cpath-wrangling](https://bit.ly/cpath-wrangling)
-- Day 1: [Slides](cpath-training/day-01-basics.html)
-- Day 2: [Slides](cpath-training/day-02-variables.html)
-- Day 3: [Slides](cpath-training/day-03-advanced.html)
+- Day 1: [Slides](https://kelseygonzalez.github.io/cpath-training/day-01-basics.html)
+- Day 2: [Slides](https://kelseygonzalez.github.io/cpath-training/day-02-variables.html)
+- Day 3: [Slides](https://kelseygonzalez.github.io/cpath-training/day-03-advanced.html)
