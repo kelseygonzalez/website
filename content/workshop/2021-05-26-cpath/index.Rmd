@@ -27,13 +27,16 @@ This nine-hour hands-on workshop is an exploration of the Tidyverse as a tool to
 Day 1 will cover basic dplyr funcitonality including `select`, `filter`, `arrange`, `mutate`, `group_by` and `summarize` and then moves into the concept of tidy data and pivots. 
 
 <div class="shareagain" style="min-width:300px;margin:1em auto;">
-  <iframe src="https://kelseygonzalez.github.io/cpath-training/day-01-basics.html" width="400" height="300" style="border:2px solid currentColor;" loading="lazy" allowfullscreen></iframe>
+  <iframe src="https://kelseygonzalez.github.io/cpath-training/day-01-basics.html" width="500" height="300" style="border:2px solid currentColor;" loading="lazy" allowfullscreen></iframe>
   <script>fitvids('.shareagain', {players: 'iframe'});</script>
 </div>
 
 Day 2 will cover special variable types and advanced creation of new variables. Specifically, we will cover `case_when`, factors with `forcats`, dates with `lubridate`, and strings and regular expressions with `stringr`. 
 
-
+<div class="shareagain" style="min-width:300px;margin:1em auto;">
+  <iframe src="https://kelseygonzalez.github.io/cpath-training/day-02-variables.html" width="500" height="300" style="border:2px solid currentColor;" loading="lazy" allowfullscreen></iframe>
+  <script>fitvids('.shareagain', {players: 'iframe'});</script>
+</div>
 
 Day 3 will cover relational data and joins in addition to more advanced and cutting edge dplyr functions like `across`, `colwise`, `rowwise`. After diving into `purrr` for iteration, we will dive into case studies. 
 
@@ -51,6 +54,8 @@ You can find step-by-step instructions for installing these here: [macOS](https:
 install.packages("tidyverse")
 install.packages("NHANES")
 install.packages("janitor")
+install.packages("gapminder")
+
 ```
 
 # Links
