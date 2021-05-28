@@ -68,6 +68,6 @@ install.packages("glue")
 # Links
 
 - Link to this website: [https://bit.ly/cpath-wrangling](https://bit.ly/cpath-wrangling)
-- Day 1: [Slides](https://kelseygonzalez.github.io/cpath-training/day-01-basics.html)
-- Day 2: [Slides](https://kelseygonzalez.github.io/cpath-training/day-02-variables.html)
-- Day 3: [Slides](https://kelseygonzalez.github.io/cpath-training/day-03-advanced.html)
+- Day 1: [Slides](https://kelseygonzalez.github.io/cpath-training/day-01-basics.html) - [Live-coded.Rmd](http://kelseygonzalez.github.io/files/Cpath-Day-1.Rmd)
+- Day 2: [Slides](https://kelseygonzalez.github.io/cpath-training/day-02-variables.html) - [Live-coded.Rmd](http://kelseygonzalez.github.io/files/Cpath-Day-2.Rmd)
+- Day 3: [Slides](https://kelseygonzalez.github.io/cpath-training/day-03-advanced.html) - [Live-coded.Rmd](http://kelseygonzalez.github.io/files/Cpath-Day-3.Rmd)

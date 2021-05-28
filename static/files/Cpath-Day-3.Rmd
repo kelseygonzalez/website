@@ -1,0 +1,293 @@
+---
+title: "Day-3"
+author: "Kelsey Gonzalez"
+date: "5/28/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Joins
+
+```{r}
+library(tidyverse)
+library(Lahman)
+data(package = "Lahman")
+
+people <- as_tibble(Lahman::People)
+batting <- as_tibble(Lahman::Batting)
+pitching <- as_tibble(Lahman::Pitching)
+fielding <- as_tibble(Lahman::Fielding)
+teams  <- as_tibble(Lahman::Teams)
+
+# vroom::vroom()
+
+people %>% 
+  count(playerID, sort = TRUE) %>% 
+  filter(n > 1)
+
+teams %>% 
+  count(teamID, sort = TRUE) %>% 
+  filter(n > 1)
+
+teams %>% 
+  count(teamID, yearID, lgID,  sort = TRUE) %>% 
+  filter(n > 1)
+```
+
+
+```{r}
+batting %>% 
+  inner_join(people) %>% 
+  select(playerID, yearID, G, AB, birthYear) %>% 
+  arrange(playerID)
+
+
+batting %>% 
+  filter(yearID == 1871) %>% 
+  left_join(people, by = "playerID")
+
+pitching %>% 
+  filter(yearID == 1945) %>% 
+  left_join(teams, by = c("yearID", "lgID", "teamID"))
+```
+
+Select all batting stats for players who were born in the 1980s.
+```{r}
+batting %>% 
+  filter(yearID >= 1980 & yearID < 1990) 
+
+  
+people %>%
+  # filter(birthYear < 1990 & birthYear >= 1980) %>%
+  filter(between(birthYear, 1980, 1989)) %>% 
+  left_join(batting, by = "playerID")
+```
+
+Add the team name to the Batting data frame.
+```{r}
+teams %>% 
+  select(teamID, yearID, lgID, team_name = name)  %>% 
+  right_join(batting, by = c("teamID", "yearID", "lgID"))
+```
+
+list the first name, last name, and team name for every player who played in 2018
+```{r}
+people %>% 
+  select(playerID, nameFirst, nameLast) %>% 
+  full_join(batting, by = "playerID") %>% 
+  filter(yearID == 2018) %>% 
+  select(-c(stint, G:GIDP)) %>% 
+  left_join(teams, by = c("teamID", "yearID", "lgID")) %>% 
+  select(nameFirst, nameLast, name)
+```
+
+
+
+## Exercise
+control + shift + i
+```{r}
+demographics <- read_csv("http://bit.ly/nhanes-demo")
+drug_history <- read_csv("http://bit.ly/nhanes-drugs")
+health_measu <- read_csv("http://bit.ly/nhanes-health")
+
+demographics %>% 
+  full_join(drug_history, by = "ID") %>% 
+  full_join(health_measu, by = "ID")
+```
+
+
+# distinct
+```{r}
+nhanes <- NHANES::NHANESraw
+
+nhanes %>% 
+  distinct(MaritalStatus, Education)
+
+nhanes %>% 
+  count(MaritalStatus, Education)
+
+nhanes %>% 
+  slice_max(MaritalStatus )
+
+nhanes %>% 
+  filter(Age == min(Age))
+nhanes %>% 
+  slice_min(Age)
+```
+
+
+## Exercise
+Using any technique we've learned, do we have any duplicate rows in nhanes?
+```{r}
+nhanes %>% 
+  count(ID) %>% 
+  filter(n>1)
+
+nhanes %>% 
+  nrow()
+nhanes %>% 
+  distinct() %>% 
+  nrow()
+```
+
+
+Find the average DirectChol for each HealthGen group; Using a slice function, which HealthGen level has the highest average DirectChol?
+
+```{r}
+nhanes %>% 
+  group_by(HealthGen) %>% 
+  summarize(average_DirectChol = mean(DirectChol, na.rm = TRUE)) %>% 
+  slice_max(average_DirectChol)
+```
+
+
+# across
+
+```{r}
+nhanes %>% 
+  summarize(across(c(BPSys1, BPSys2),
+                   mean,
+                   na.rm = TRUE))
+
+
+nhanes %>% 
+  summarize(across(c(BPSys1, BPSys2),
+                   ~ mean(.x, na.rm = TRUE)))
+
+```
+
+
+For those who have diabetes and those who don't, find the mean Pulse, BPDiaAve and DirectChol.
+```{r}
+nhanes %>% 
+  group_by(Diabetes) %>% 
+  summarize(across(c("Pulse","BPDiaAve","DirectChol"), 
+                   mean, 
+                   na.rm = TRUE)) %>% 
+  # na.omit() %>% 
+  drop_na()
+```
+
+Use a tidy select function inside of across to find the maximum UrineVol1 and UrineVol2
+```{r}
+nhanes %>% 
+  summarize(across(starts_with("UrineVol"),
+                   ~ max(.x, na.rm = TRUE)))
+```
+
+```{r}
+nhanes %>% 
+  summarize(across(c("UrineVol1", "DirectChol"),
+                   list("mean" = mean, 
+                        "sd" = sd, 
+                        "min" = min, 
+                        "max" = max),
+                   na.rm = TRUE,
+                   .names = "{.fn}_of_{.col}"))
+```
+
+
+You plan to predict Diabetes status with the following independent variables: Weight, Pulse, SleepHrsNight, PhysActiveDays, and AlcoholDay.
+
+Use summarize and across to find the mean and standard deviation of each of these variables.
+```{r}
+nhanes %>% 
+    summarize(across(c("Weight", "Pulse", "SleepHrsNight", 
+                       "PhysActiveDays", "AlcoholDay"),
+                     list("Mean" = mean, "SD" = sd),
+                     na.rm = TRUE)) %>% 
+  pivot_longer(cols = everything(), 
+               names_pattern = "(.*)_(.*)",
+               names_to = c("Variable", "Measure")) %>% 
+  pivot_wider(id_cols = "Variable",
+              names_from = "Measure",
+              values_from = "value")
+
+```
+
+
+You plan to use an algorithm that needs all predictors on the same scale. Using mutate and across, normalize your variables using the scale() function. Make the new variable labels col_normalized.
+
+control + i = fix tabs
+control + shift + a = fix styling
+```{r}
+nhanes %>%
+  mutate(across(
+    c(
+      "Weight",
+      "Pulse",
+      "SleepHrsNight",
+      "PhysActiveDays",
+      "AlcoholDay"
+    ),
+    list(normalized = scale)
+  )) %>% 
+  select(starts_with("AlcoholDay"))
+
+nhanes %>% 
+  count(across(contains("Smoke")), sort = TRUE)
+```
+
+```{r}
+nhanes %>% 
+  select(matches("BPSys\\d")) %>% 
+  mutate(mean_bpsys = mean(c(BPSys1, BPSys2, BPSys3), na.rm = TRUE)) %>% 
+  view("temporary")
+
+nhanes %>% 
+  select(ID, matches("BPSys\\d")) %>% 
+  rowwise() %>% 
+  mutate(mean_bpsys = mean(c(BPSys1, BPSys2, BPSys3), na.rm = TRUE))
+```
+
+
+Add a new column that calculates the average UrineFlow and UrineVol for each individual.
+
+```{r}
+nhanes %>% 
+  select(ID, matches("Urine")) %>% 
+  rowwise() %>% 
+  mutate(UrineVolAve = mean(c(UrineVol1, UrineVol2), na.rm = TRUE),
+         UrineFlowAve = mean(c(UrineFlow1, UrineFlow2), na.rm = TRUE) )
+```
+
+Using c_across
+```{r}
+nhanes %>% 
+  select(ID, matches("Urine")) %>% 
+  rowwise() %>% 
+  mutate(UrineVolAve = mean(c_across(starts_with("UrineVol")), na.rm = TRUE)) %>% 
+  write_csv("data/test2.csv")
+```
+
+```{r}
+csv_files <- list.files("data") 
+library(glue)
+all_files <- map(glue("data/{csv_files}"),
+                             read_csv) %>% 
+  reduce(bind_rows)
+```
+
+
+```{r}
+nhanes %>% 
+  group_by(Education) %>% 
+  nest() %>% 
+  pwalk(function(data, Education) {write_csv(data, glue("data/nhanes_{Education}.csv"))})
+
+```
+
+```{r}
+
+df1 <- tibble(x = 1:3, a = c("a", "b", "c"))
+df2 <- tibble(x = 1:3, b = c("d", "e", "f"))
+df3 <- tibble(x = 1:3, c = c("x", "y", "z"))
+
+list(df1, df2, df3) %>% 
+  reduce(left_join, by = "x")
+```
+

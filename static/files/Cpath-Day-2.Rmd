@@ -1,0 +1,274 @@
+--- 
+title: "Day 2"
+author: "Kelsey Gonzalez"
+date: "5/27/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# ifelse
+ctrl alt i
+```{r}
+library(NHANES)
+library(tidyverse)
+
+nhanes <- NHANES::NHANESraw
+
+nhanes %>% 
+  mutate(pulse_type = ifelse(Pulse > 70, "fast", "slow")) %>% 
+  select(Pulse, pulse_type)
+```
+
+# case_when
+```{r}
+nhanes %>% 
+  mutate(health_status = case_when(Diabetes == "Yes" ~ "at-risk",
+                                   Age > 70 ~ "at-risk",
+                                   BPDiaAve < 80 & BPSysAve > 120 ~ "at-risk",
+                                   TRUE ~ "okay")) %>% 
+  select(health_status, Diabetes, Age, BPDiaAve, BPSysAve)
+```
+
+## exercise
+
+```{r}
+nhanes %>% 
+  mutate(AgeDecade = case_when(Age >0 & Age < 10 ~ "0-9",
+                               Age >9 & Age < 20 ~ "10-19",
+                               Age >19 & Age < 30 ~ "20-29",
+                               Age >29 & Age < 40 ~ "30-39",
+                               Age >39 & Age < 50 ~ "40-49",
+                               Age >49 & Age < 60 ~ "50-59",
+                               Age >59 & Age < 70 ~ "60-69",
+                               TRUE ~ "70+")) %>% 
+                               select(Age,AgeDecade)
+
+nhanes %>% 
+  mutate(AgeDecade = case_when(between(Age, 1,9) ~ '0-9',
+                              between(Age,10,19) ~ '10-19',
+                              between(Age,20,29) ~ '20-29',
+                              between(Age,30,39) ~ '30-39',
+                              between(Age,40,49) ~ '40-49',
+                              between(Age,50,59) ~ '50-59',
+                              between(Age,60,69) ~ '60-69',
+                              Age >= 70 ~ '70+',
+                              TRUE ~ "don't know")) %>% 
+  select(Age,AgeDecade) %>% 
+
+  count(AgeDecade )
+# not working, debug later
+# x <- list('Age' = 'age','Diabetes'='diabetes' )
+# nhanes %>% 
+#   rename(!!x)
+
+```
+
+```{r}
+z <- "You don't manage people, you manage things.\nYou lead people."
+```
+
+How many characters does this string have?
+```{r}
+str_length(z)
+```
+
+Using string subsetting by indexes, can you extract the word "people"?
+```{r}
+str_sub(z, start = 18, end = 23)
+str_sub(z, start = -7, end = -2)
+```
+
+Replace the \n with a space
+```{r}
+str_replace(z, "\n", " ")
+```
+
+# Regular Expressions
+
+```{r}
+fruit <- c("Apple", "Strawberry", "Banana", "Pear", "Blackberry", "*berry")
+str_view(fruit, pattern = "an")
+str_view_all(fruit, pattern = "an")
+str_view(fruit, ".")
+str_view(fruit, "[:alpha:]berry")
+str_view(fruit, "\\*berry")
+str_view(fruit, "..$")
+str_view(fruit, "^(?i)[aeiou]") # (?i) case insensitive 
+str_view(fruit, "^(?i)[^aeiou]") 
+str_view(stringr::words, ".*")
+
+
+phone <- c("800-800-8553", "253-555-0101", "520-555-0011")
+str_view(phone, "[:digit:]{3}") # [:digit:] or \\d 
+str_view(phone, "[:digit:]{3}-[:digit:]{3}-") 
+str_view(phone, "[:digit:]{3}-[:digit:]{3}-[:digit:]{4}") 
+str_view(phone, "[:digit:]{3}-555-") 
+
+```
+
+## exercises
+
+Start with “y”
+```{r}
+str_view(stringr::words, "^[yY]", match = TRUE)
+```
+
+End with “x”
+```{r}
+str_view(stringr::words, "x$", match = TRUE)
+```
+
+Are exactly three letters long
+```{r}
+str_view(stringr::words, "^...$", match = TRUE)
+```
+
+Have seven letters or more
+```{r}
+str_view(stringr::words, ".{7}", match = TRUE)
+str_view(stringr::words, ".{7,}", match = TRUE)
+```
+
+Start with a vowel
+```{r}
+str_view(stringr::words, "^[aeiou].{2,}", match = TRUE)
+```
+
+# glue
+```{r}
+library(glue)
+
+name <- "Kelsey"
+location <- "Phoenix"
+state <- "AZ"
+age <- 45
+
+glue("My name is {name}, I'm in {location}, {state}. Next year I will be {age + 1} years old")
+
+paste("My name is", name, "I'm in", location,",", state, ". Next year I will be", age + 1,"years old")
+
+write_csv(nhanes, glue("nhanes_cleaned_{Sys.Date()}.csv"))
+```
+
+```{r}
+nhanes %>% 
+  mutate(smoke_text = case_when(SmokeNow == "Yes" ~ "smokes",
+                                SmokeNow == "No" ~ "doesn't smoke",
+                                Age < 20 ~ "is too young to smoke",
+                                TRUE ~ "we don't know the smoking status"),
+         about = glue("{ID} is a {Age} year old {Gender} who {smoke_text}")) %>% 
+  select(smoke_text, about)
+
+```
+
+
+# factors
+
+```{r}
+library(gapminder)
+data("gapminder")
+gapminder <- gapminder::gapminder
+glimpse(gapminder$continent)
+nlevels(gapminder$continent)
+levels(gapminder$continent)
+```
+
+## fct_relevel
+manual reordering of a factor
+```{r}
+gapminder <- gapminder %>% 
+  mutate(contintent_relevel = fct_relevel(continent, "Asia", "Africa", "Americas",
+                                          "Europe", "Oceania"))
+levels(gapminder$contintent_relevel)
+
+```
+
+## fct_infreq
+reorder based on # of observations 
+```{r}
+gapminder <- gapminder %>% 
+  mutate(continent_infreq = fct_infreq(continent, ordered = TRUE))
+levels(gapminder$continent_infreq)
+
+```
+
+## fct_reorder
+reorder based on another variable
+```{r}
+levels(gapminder$country)
+
+gapminder <- gapminder %>% 
+  mutate(country_reorder = fct_reorder(country, lifeExp),
+         country_reorder2 = fct_reorder(country, pop, .fun = max, .desc = TRUE))
+
+levels(gapminder$country_reorder)
+levels(gapminder$country_reorder2)
+
+```
+
+## Exercise
+
+```{r}
+nhanes <- nhanes %>% 
+  mutate(MaritalStatus_manual = fct_relevel(MaritalStatus, "NeverMarried", "LivePartner",
+                                            "Married","Separated", "Divorced", "Widowed"),
+         MaritalStatus_freq = fct_infreq(MaritalStatus), 
+         MaritalStatus_active = fct_reorder(MaritalStatus, PhysActiveDays),
+         MaritalStatus_manual = fct_recode(MaritalStatus_manual,  
+                                           "Never Married" = "NeverMarried", 
+                                           "Lives with Partner" = "LivePartner"))
+
+levels(nhanes$MaritalStatus_manual)
+levels(nhanes$MaritalStatus_freq)
+levels(nhanes$MaritalStatus_active)
+
+nhanes %>% 
+  group_by(MaritalStatus) %>% 
+  summarize(median(PhysActiveDays, na.rm = TRUE))
+
+```
+
+
+# Dates
+
+```{r}
+library(lubridate)
+
+d1 <- "January 1, 2010"
+d2 <- "2015-Mar-07"
+d3 <- "06-Jun-2017"
+d4 <- c("August 19 (2015)", "July 1 (2015)")
+d5 <- "12/30/14 23:14:11"
+
+mdy(d1)
+ymd(d2)
+dmy(d3)
+mdy(d4)
+mdy_hms(d5, tz = "MST")
+```
+
+
+## Periods
+
+```{r}
+months(3) + days(12)
+
+mdy("05/27/2021") + months(3) + days(12)
+
+
+d1 <- mdy("June 13, 2013")
+d2 <- today()
+d2-d1
+```
+
+## durations
+
+
+```{r}
+as.duration(d2-d1)
+```
+

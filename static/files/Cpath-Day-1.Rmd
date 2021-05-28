@@ -1,0 +1,272 @@
+---
+title: "C-Path Day 1"
+author: "Kelsey Gonzalez"
+date: "5/26/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Load Packages
+
+```{r}
+library(tidyverse)
+library(NHANES)
+library(janitor)
+# janitor::clean_names()
+```
+
+```{r}
+nhanes <- NHANES::NHANESraw
+?NHANES
+glimpse(nhanes)
+
+class(nhanes)
+
+# convert data to a tibble
+data <- as.data.frame(nhanes)
+data <- as_tibble(data)
+
+```
+
+# select
+
+```{r}
+names(nhanes)
+
+select(nhanes, Gender, Age, ID)
+select(nhanes, -Gender)
+select(nhanes, -Gender, -Age)
+select(nhanes, -c(Gender, Age))
+select(nhanes, 75:78) # i don't recommend this 
+select(nhanes, Weight:BMI)
+
+select(nhanes, starts_with("BP"))
+select(nhanes, contains("Age"))
+select(nhanes, ends_with("Year"))
+```
+
+Exercise
+
+```{r}
+select(nhanes, starts_with("A"))
+select(nhanes, contains("Year"))
+
+pat_pop <- select(nhanes, ID:Age, Height, BMI,Depressed ,Diabetes)
+pat_pop
+
+```
+
+# filter
+
+```{r}
+filter(nhanes, 
+       Weight > 65)
+
+filter(nhanes, 
+       Age <= 20)
+
+filter(nhanes,
+       (Weight > 65) & (Age <= 20))
+
+filter(nhanes,
+       Weight > 65,
+       Age <= 20,
+       Race1 == "Black") # 420 rows
+
+filter(nhanes,
+       Weight > 65 |
+       Age <= 20 |
+       Race1 == "Black") #17,765 rows
+
+filter(nhanes,
+       Weight > 65,
+       Race1 != "Black")
+
+filter(nhanes, 
+       !is.na(Weight))
+
+# Weight == NA 
+```
+
+= is assignment
+== is evaluation 
+
+```{r}
+filter(nhanes,
+       Weight > 65,
+       Diabetes != "Yes",
+       # Diabetes == "No"
+       !is.na(SmokeNow))
+
+```
+
+# pipes
+
+control + shift + m
+
+```{r}
+nhanes %>% 
+  # filter(.data = ., Diabetes != "Yes") %>% 
+  filter(Diabetes != "Yes") %>% 
+  select(ID:Age, Race3)
+```
+
+```{r}
+new_data <- nhanes %>% 
+  filter(AlcoholDay >= 2,
+         Smoke100 == "Yes") %>% 
+  select(ID,Smoke100,SleepHrsNight)
+
+new_data
+
+#2424 rows
+#3 columns
+
+```
+
+```{r}
+df <- nhanes %>%
+  filter(AlcoholDay >= 2) %>% 
+  filter (Smoke100 == "Yes") %>% 
+  select(ID, Smoke100, SleepHrsNight)
+
+```
+```{r}
+unique(nhanes$Smoke100) # Yes  <NA> No
+range(nhanes$AlcoholDay[!is.na(nhanes$AlcoholDay)]) # 1 82
+
+data <- nhanes %>% 
+  filter(!is.na(AlcoholDay) & AlcoholDay>=2,
+         Smoke100=='Yes') %>%
+  select(ID, Smoke100, SleepHrsNight)
+dim(data) # 2424    3
+
+```
+
+# arrange
+```{r}
+nhanes %>% 
+  arrange(Age) %>% 
+  select(Age)
+
+nhanes %>% 
+  arrange(-Age) %>% 
+  select(Age)
+
+nhanes %>% 
+  arrange(Race1)
+
+nhanes %>% 
+  arrange(desc(Race1))
+
+nhanes %>% 
+  arrange(SurveyYr, -Age)
+```
+
+#renaming
+```{r}
+nhanes %>% 
+  rename(gender = Gender,
+         race_primary = Race1)
+
+nhanes %>% 
+  select(gender = Gender,
+         race_primary = Race1)
+
+nhanes %>% 
+  janitor::clean_names()
+
+```
+
+# mutate
+```{r}
+nhanes %>% 
+  mutate(age_in_months = Age * 12) %>% 
+  select(starts_with("Age"), starts_with("age"))
+```
+
+# summarize 
+```{r}
+nhanes %>% 
+  summarize(mean_age_first_baby = mean(Age1stBaby, na.rm = TRUE),
+            mean_age_first_marriage = mean(AgeFirstMarij, na.rm = TRUE))
+```
+
+```{r}
+nhanes %>% 
+  mutate(Age_group = cut(Age, breaks = 5)) %>% 
+  group_by(Age_group) %>% 
+  summarize(mean_age_first_baby = mean(Age1stBaby, na.rm = TRUE),
+            mean_age_first_marriage = mean(AgeFirstMarij, na.rm = TRUE))
+```
+
+# count
+```{r}
+nhanes %>% 
+  count(Smoke100, SmokeNow)
+```
+
+```{r}
+nhanes %>% 
+  group_by(Education) %>% 
+  summarize(Education_Level = n())
+
+
+nhanes %>% 
+  summarize(min=min(BPDiaAve,na.rm=T),
+            median=median(BPDiaAve,na.rm=T),
+            max=max(BPDiaAve,na.rm=T))
+
+
+nhanes %>% 
+  group_by(Diabetes) %>% 
+  summarise(mean_days = mean(PhysActiveDays, na.rm = T),
+            mean_sleep = mean(SleepHrsNight, na.rm = T))
+```
+
+```{r}
+monkeys <- read_csv("http://bit.ly/monkey-mem")
+head(monkeys)
+
+monkeys %>% 
+  pivot_longer(cols= c("Week2", "Week4", "Week8", "Week12", "Week16"),
+               names_to="Week",
+               names_prefix = "Week",
+               values_to="Cases")
+
+
+tidyr::table4a %>% 
+  pivot_longer(cols = c(`1999`, `2000`), 
+               names_to = "year", 
+               values_to = "cases")
+```
+
+```{r}
+tidyr::who %>% 
+  pivot_longer(cols = new_sp_m014:newrel_f65,
+               names_pattern = "new_(.*)_(.)(.*)",
+               names_to = c("diagnosis", "gender", "age_group"))
+```
+
+
+```{r}
+flowers <- read_csv2("http://bit.ly/tidy_flowers")
+slice(flowers,20:28)
+flowers %>% 
+  pivot_wider(id_cols = c(Time, replication),
+              names_from = Variable, #new column names
+              values_from = Value) # new cell values 
+```
+
+```{r}
+nhanes %>% 
+  count(Gender, Race1) %>% 
+  pivot_wider(id_cols = Gender, 
+              names_from = Race1, #new column names
+              values_from = n) %>% 
+  knitr::kable(format = "html")
+```
+
