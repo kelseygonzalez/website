@@ -1,7 +1,7 @@
 ---
 authors:
 - admin
-bio: I'm a computational social scientist interested in using social data in new and innovative ways.
+bio: Computational Social Scientist; Data Scientist; Sociologist. 
 education:
   courses:
   - course: PhD in Sociology
@@ -51,8 +51,10 @@ I'm a PhD Candidate in the School of Sociology at the University of Arizona. My 
 
 I have a strong methodological background following my extensive quantitative and computational methods training at the University of Arizona. I have researched Latina/o Panethnicity, white fragility, and population health behaviors during  Covid-19, leading to publications in *Ethnic and Racial Studies*, *Sociological Perspectives*, *Journal on Migration and Human Security*, and the *Journal of Religion and Health*.
 
-Currently, I manage the survey data pipeline for a project supported by the [U.S. Department of Defense Minerva Research Initiative](https://minerva.defense.gov/) analyzing non-state actor governance in Colombia and Afghanistan. I am also conducting a survey investigating network resource activation supported by the [Russel Sage Foundation's Summer Institutes in Computational Social Science](https://sicss.io/). Additionally, I am investigating racial disparities in happiness, textual networks of weight loss discourse, convergent validity and correspondence of Google Trends, diffusion of misinformation in population networks, and developing visualization tools for multinomial logistic regression. 
+My dissertation research focuses on how people search for information and rely on this information to inform their health behaviors and develop social norms, particularly during times of uncertainty.
 
-I am a [Certified RStudio Trainer](https://education.rstudio.com/trainers/) and a [Carpentries instructor](https://carpentries.org/instructors/). Locally, I am involved with data science education at the University of Arizona as a [Senior Data Science Ambassador](https://datascience.arizona.edu/ambassadors) for the College of Social and Behavioral Sciences and a [Steering Committee member](http://researchbazaar.arizona.edu/) for Research Bazaar Arizona. 
+Currently, I am a Senior Data Scientist Intern for the Chief Analytics office at IBM. In this role, I produced ML-driven insights to address questions for workforce management and designed an unsupervised recommendation algorithm to provide IBM employees with actionable recommendations for reskilling.
+
+I am a [Certified RStudio Trainer](https://education.rstudio.com/trainers/) and a [Carpentries instructor](https://carpentries.org/instructors/). Locally, I am involved with data science education at the University of Arizona and previously was a [Senior Data Science Ambassador](https://datascience.arizona.edu/ambassadors) for the College of Social and Behavioral Sciences and a [Steering Committee member](http://researchbazaar.arizona.edu/) for Research Bazaar Arizona. 
 
 <!---Kelsey received her MA in Sociology from the University of Arizona in 2018 where she investigated the impacts of personal networks and homophily on individuals’ perceptions of discrimination. Before coming to the University of Arizona, she earned her MPhil in Race, Ethnicity and Conflict from the Department of Sociology at Trinity College, Dublin in 2015.-->
