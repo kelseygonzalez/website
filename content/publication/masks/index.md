@@ -12,16 +12,16 @@ image:
   focal_point: ""
   preview_only: false
 projects: []
-publication: "*Social Science Quarterly*, Fortcoming"
-publication_short: "*Social Science Quarterly*, Fortcoming"
+publication: "*Social Science Quarterly*, Online First"
+publication_short: "*Social Science Quarterly*, Online First"
 publication_types: 
   - "2"
 publishDate: "2021-08-02T00:00:00Z"
 summary: ""
 title: "Conservatism and Infrequent Mask Usage: A Study of US Counties During the Novel Coronavirus (COVID-19) Pandemic"
 url_code: ""
-url_dataset: ""
-url_pdf: ""
+url_dataset: "https://github.com/nytimes/covid-19-data/tree/master/mask-use"
+url_pdf: "/files/masks.pdf"
 url_poster: ""
 url_project: ""
 url_slides: ""
