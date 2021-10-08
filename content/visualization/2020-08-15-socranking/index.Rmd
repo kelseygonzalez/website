@@ -39,12 +39,26 @@ pacman::p_load(tidyverse, ggbump, ggrepel, hrbrthemes, plotly)
 
 #load the data
 rankings_long <- read_csv("sociology_rankings.csv") %>% 
+  select(-rank20) %>% 
   filter(rank05 != 100) %>% 
   mutate(change = rank17 - rank05,
          direction = case_when(change > 2 ~ "Fallen",
                                change < -2 ~ "Risen",
                                TRUE ~ "Stable")) %>% 
     pivot_longer(cols = rank17:rank05, 
+               names_prefix = "rank", names_to = "year", 
+               values_to = "rank") %>% 
+  mutate(year = as.numeric(year),
+         year = ifelse(year > 10, paste0("20", year), paste0("200", year)),
+         year = as.numeric(year))
+
+rankings_long_2020 <- read_csv("sociology_rankings.csv") %>% 
+  filter(rank05 != 100) %>% 
+  mutate(change = rank20 - rank05,
+         direction = case_when(change > 2 ~ "Fallen",
+                               change < -2 ~ "Risen",
+                               TRUE ~ "Stable")) %>% 
+    pivot_longer(cols = rank20:rank05, 
                names_prefix = "rank", names_to = "year", 
                values_to = "rank") %>% 
   mutate(year = as.numeric(year),
@@ -274,9 +288,7 @@ ggplot(rank,
                        collapse = "\n")) 
 ```
 
-```{r, eval = TRUE, echo = FALSE}
-ggsave("featured.png")
-```
+
 
 When I discovered `ggbump`, I knew this would fix all of my issues! Also, this required
 the employment of `rank(rank, ties.method = "first")` to solve the same rank overplotting 
@@ -330,3 +342,68 @@ top_60_plotly <- top_60 +
 plotly::ggplotly(top_60_plotly, tooltip = c("school", "year", "rank"))
 ```
 I'm not sure why the labels are getting so cut off, but that's a bug for another day. 
+
+
+# Update: Octover 7th, 2021
+Now that the 2020 rankings have been published by US News, here's an update to the plot:
+```{r plot 7}
+# extract jumps over 5 spots
+highest_rise <- rankings_long_2020 %>% 
+  filter(year == "2020",
+         change <= -6) %>%  
+  arrange(change) %>% head(10) %>% 
+  pull(school_short)
+
+# extract drops over 5 spots
+highest_drop <- rankings_long_2020 %>% 
+  filter(year == "2020",
+         change >= 6) %>%  
+  arrange(desc(change)) %>% 
+  pull(school_short)
+
+rank <- rankings_long_2020 %>% 
+  select(school, school_short, rank, year) %>% 
+  group_by(year) %>% 
+  # clean up rankings with rank() function
+  mutate(rank_untied = rank(rank, ties.method = "first")) %>% 
+  ungroup() %>%  
+  mutate(interesting = case_when(school_short %in% highest_drop ~ "drop",
+                                 school_short %in% highest_rise ~ "jump",
+                                 TRUE ~ "normal"),
+         school_short = str_trim(school_short, side = "both"))
+
+ggplot(rank, 
+       aes(x = year, y = rank_untied, group = school_short, color = interesting)) +
+  geom_point(size = 3.5) +
+  geom_text(data = rank %>% filter(year == min(year)),
+            aes(x = year - 0.25, label = school_short), size = 2, hjust = 1, face = "bold") +
+  geom_text(data = rank %>% filter(year == max(year)),
+            aes(x = year + 0.25, label = school_short), size = 2, hjust = 0, face = "bold") +
+  geom_bump(size = 2, smooth = 8, alpha =.8) +
+  geom_text(aes(x = year, y = rank_untied, label = rank), color = "white", size = 2) +
+  scale_y_reverse(expand = c(0,.5)) +
+  coord_cartesian(ylim = c(30, 0)) +
+  scale_x_continuous(breaks = c(2005, 2009, 2013, 2017,2020), expand = c(0,1.5), position = "top")+
+  scale_color_manual(values = c("#B85854","#799CB8",  "#b5b867"))+
+  hrbrthemes::theme_ipsum_rc() +
+  theme(legend.position = "none",
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        axis.text.x = element_text(size = 10, color = "#153354", face = "bold"),
+        axis.title.y = element_blank(),
+        axis.title.x = element_blank(),
+        axis.text.y = element_blank(),
+        plot.title = element_text(color = "#153354",face = "bold", size = 18, vjust = 0),
+        plot.subtitle = element_text(color = "#153354",face = "plain", size = 12, vjust = 1),
+        plot.caption = element_text(color = "#153354"),
+        plot.margin = margin(0,0,0,0, "cm"))  +
+  labs(title  = "US News Sociology Ranking Over the Years",
+       subtitle = "Rankings remain quite stable in the top tier, with only NYU moving more than 10 ranks",
+       caption = paste(c("Source: US News and World Report",
+                         "github.com/kelseygonzalez"),
+                       collapse = "\n")) 
+```
+
+```{r, eval = TRUE, echo = FALSE}
+ggsave("featured.png")
+```

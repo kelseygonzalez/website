@@ -1,76 +1,79 @@
-school,school_short,rank17,rank13,rank09,rank05
-University of California--Berkeley,Berkeley,1,1,1,2
-University of Wisconsin--Madison,Wisconsin,6,1,2,1
-University of Michigan--Ann Arbor,Michigan,1,4,3,3
-Princeton University,Princeton,1,1,3,6
-Harvard University,Harvard,1,6,5,8
-Stanford University,Stanford,5,4,5,6
-University of North Carolina--Chapel Hill,UNC,6,6,5,4
-University of Chicago,Chicago,8,6,5,4
-University of California--Los Angeles,UCLA,8,9,9,8
-Northwestern University,Northwestern,10,10,9,11
-University of Pennsylvania,Penn,11,10,11,10
-Columbia University,Columbia,11,12,11,11
-Indiana University--Bloomington,Indiana,15,12,11,11
-University of Texas--Austin,UT-Austin,11,14,14,14
-New York University,NYU,11,16,14,22
-Duke University,Duke,15,14,14,14
-Cornell University,Cornell,17,17,17,14
-University of Washington,UWash,17,20,17,17
-Ohio State University,Ohio State,17,17,17,20
-Pennsylvania State University--University Park,Penn State,17,17,20,17
-University of Minnesota--Twin Cities,Minnesota,17,20,20,22
-Yale University,Yale,22,20,20,20
-University of Arizona,Arizona,24,20,20,17
-University of Maryland--College Park,Maryland,24,24,20,25
-Brown University,Brown,24,25,25,27
-Johns Hopkins University,Johns Hopkins,27,27,25,22
-University of California--Irvine,Irvine,23,25,27,27
-University at Albany--SUNY,Albany,36,28,28,25
-CUNY Graduate School and University Center,CUNY,28,28,28,31
-University of California--Santa Barbara,UCSB,32,31,28,29
-"Rutgers, the State University of New Jersey--New Brunswick",Rutgers,28,28,31,31
-University of California--Davis,Davis,30,31,31,29
-University of Massachusetts--Amherst,Mass,30,31,31,34
-Vanderbilt University,Vanderbilt,32,31,31,31
-University of California--San Diego,UCSD,36,35,31,34
-University of Virginia,Virginia,32,35,36,38
-University of Iowa,Iowa,36,35,36,34
-Emory University,Emory,36,35,36,38
-University of Southern California,USC,40,39,39,42
-Florida State University,FSU,47,39,39,42
-Stony Brook University--SUNY,Stony Brook,40,42,41,38
-Washington State University,WSU,42,46,41,38
-University of Illinois--Chicago,Illinois,42,39,41,46
-Boston College,Boston C,42,46,41,49
-Texas A&M University--College Station,Texas A&M,47,46,41,49
-University of California--Riverside,Riverside,57,42,41,42
-University of Florida,Florida,57,52,41,46
-University of Notre Dame,Notre Dame,32,42,48,49
-Michigan State University,Michigan State,42,46,48,42
-University of Illinois--Urbana-Champaign,UIUC,47,42,48,34
-North Carolina State University,NCSU,47,52,48,46
-Brandeis University,Brandeis,47,52,48,49
-University of Georgia,Georgia,47,46,48,55
-University of Pittsburgh,Pittsburgh,57,52,54,49
-Purdue University--West Lafayette,Purdue,57,52,54,58
-University of California--Santa Cruz,UCSC,71,59,54,58
-University of Colorado--Boulder,Colorado,42,46,57,55
-University of Oregon,Oregon,47,59,57,55
-Boston University,Boston U,47,59,57,100
-University of Connecticut,Connecticut,63,52,57,58
-New School,New School,67,59,57,49
-Arizona State University,ASU,67,59,57,58
-University of California--San Francisco,UCSF,71,52,57,58
-University of Delaware,Delaware,63,64,64,100
-University of Kansas,Kansas,75,64,64,58
-Northeastern University,Northeastern,47,64,66,100
-Virginia Tech,Virginia Tech,47,69,66,100
-Bowling Green State University,Bowling Green,57,64,66,100
-Syracuse University,Syracuse,63,69,66,100
-University of South Carolina,South Carolina,63,69,66,100
-Binghamton University--SUNY,Binghamton,87,69,66,100
-Temple University,Temple,57,64,72,100
-University of Nebraska-Lincoln,Nebraska,63,69,72,100
-"Teachers College, Columbia University","Teachers College, Columbia",67,74,72,100
-Iowa State University,Iowa State,80,74,72,58
+school,school_short,rank20,rank17,rank13,rank09,rank05
+Arizona State University,ASU,70,67,59,57,58
+Baylor University,Baylor,84,100,100,100,100
+Binghamton University--SUNY,Binghamton,71,87,69,66,100
+Boston College,Boston C,45,42,46,41,49
+Boston University,Boston U,41,47,59,57,100
+Bowling Green State University,Bowling Green,79,57,64,66,100
+Brandeis University,Brandeis,54,47,52,48,49
+Brown University,Brown,20,24,25,25,27
+Columbia University,Columbia,11,11,12,11,11
+Cornell University,Cornell,16,17,17,17,14
+CUNY Graduate School and University Center,CUNY,26,28,28,28,31
+Duke University,Duke,13,15,14,14,14
+Emory University,Emory,34,36,35,36,38
+Florida State University,FSU,49,47,39,39,42
+Harvard University,Harvard,2,1,6,5,8
+Indiana University--Bloomington,Indiana,17,15,12,11,11
+Iowa State University,Iowa State,74,80,74,72,58
+Johns Hopkins University,Johns Hopkins,29,27,27,25,22
+Michigan State University,Michigan State,55,42,46,48,42
+New School,New School,56,67,59,57,49
+New York University,NYU,14,11,16,14,22
+North Carolina State University,NCSU,61,47,52,48,46
+Northeastern University,Northeastern,57,47,64,66,100
+Northwestern University,Northwestern,7,10,10,9,11
+Ohio State University,Ohio State,18,17,17,17,20
+Pennsylvania State University--University Park,Penn State,23,17,17,20,17
+Princeton University,Princeton,3,1,1,3,6
+Purdue University--West Lafayette,Purdue,58,57,52,54,58
+Rice University,Rice,35,100,100,100,100
+"Rutgers, the State University of New Jersey--New Brunswick",Rutgers,31,28,28,31,31
+Stanford University,Stanford,5,5,4,5,6
+Stony Brook University--SUNY,Stony Brook,46,40,42,41,38
+Syracuse University,Syracuse,62,63,69,66,100
+"Teachers College, Columbia University","Teachers College, Columbia",80,67,74,72,100
+Temple University,Temple,63,57,64,72,100
+Texas A&M University--College Station,Texas A&M,42,47,46,41,49
+University at Albany--SUNY,Albany,43,36,28,28,25
+University at Buffalo--SUNY,Buffalo,64,100,100,100,100
+University of Arizona,Arizona,27,24,20,20,17
+University of California--Berkeley,Berkeley,1,1,1,1,2
+University of California--Davis,Davis,32,30,31,31,29
+University of California--Irvine,Irvine,21,23,25,27,27
+University of California--Los Angeles,UCLA,6,8,9,9,8
+University of California--Riverside,Riverside,50,57,42,41,42
+University of California--San Diego,UCSD,33,36,35,31,34
+University of California--San Francisco,UCSF,65,71,52,57,58
+University of California--Santa Barbara,UCSB,36,32,31,28,29
+University of California--Santa Cruz,UCSC,76,71,59,54,58
+University of Chicago,Chicago,8,8,6,5,4
+University of Colorado--Boulder,Colorado,37,42,46,57,55
+University of Connecticut,Connecticut,51,63,52,57,58
+University of Delaware,Delaware,81,63,64,64,100
+University of Florida,Florida,66,57,52,41,46
+University of Georgia,Georgia,52,47,46,48,55
+University of Illinois--Chicago,Illinois,47,42,39,41,46
+University of Illinois--Urbana-Champaign,UIUC,53,47,42,48,34
+University of Iowa,Iowa,44,36,35,36,34
+University of Kansas,Kansas,67,75,64,64,58
+University of Maryland--College Park,Maryland,24,24,24,20,25
+University of Massachusetts--Amherst,Mass,30,30,31,31,34
+University of Michigan--Ann Arbor,Michigan,4,1,4,3,3
+University of Minnesota--Twin Cities,Minnesota,25,17,20,20,22
+University of Nebraska--Lincoln,Nebraska,77,63,69,72,100
+University of North Carolina--Chapel Hill,UNC,9,6,6,5,4
+University of Notre Dame,Notre Dame,28,32,42,48,49
+University of Oregon,Oregon,48,47,59,57,55
+University of Pennsylvania,Penn,15,11,10,11,10
+University of Pittsburgh,Pittsburgh,59,57,52,54,49
+University of South Carolina,South Carolina,68,63,69,66,100
+University of Southern California,USC,38,40,39,39,42
+University of Texas--Austin,UT-Austin,12,11,14,14,14
+University of Virginia,Virginia,39,32,35,36,38
+University of Washington,UWash,22,17,20,17,17
+University of Wisconsin--Madison,Wisconsin,10,6,1,2,1
+Vanderbilt University,Vanderbilt,40,32,31,31,31
+Virginia Tech,Virginia Tech,69,47,69,66,100
+Washington State University,WSU,60,42,46,41,38
+Yale University,Yale,19,22,20,20,20
