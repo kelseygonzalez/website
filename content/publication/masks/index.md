@@ -12,8 +12,8 @@ image:
   focal_point: ""
   preview_only: false
 projects: []
-publication: "*Social Science Quarterly*, Online First"
-publication_short: "*Social Science Quarterly*, Online First"
+publication: "*Social Science Quarterly*, 102:2368-2382"
+publication_short: "*Social Science Quarterly*, 102:2368-2382"
 publication_types: 
   - "2"
 publishDate: "2021-08-02T00:00:00Z"
