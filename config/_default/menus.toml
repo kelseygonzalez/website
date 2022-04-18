@@ -14,6 +14,11 @@
   name = "CV"
   url = "files/cv.pdf"
   weight = 20  
+  
+[[main]]
+  name = "Resume"
+  url = "files/resume.pdf"
+  weight = 20  
 
 [[main]]
   name = "Publications"

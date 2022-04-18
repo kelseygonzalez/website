@@ -47,14 +47,22 @@ superuser: true
 title: Kelsey E. Gonzalez
 ---
 
-I'm a PhD Candidate in the School of Sociology at the University of Arizona. My research focuses on computational methods, advanced statistical methods, and social networks analysis in connection to interests in social networks, health behavior, diffusion, and communication technologies.
+I'm a Senior Data Scientist in the Chief Analytics Office at IBM. Currently,
+I apply NLP to build recommendations in the People Analytics domain. 
+
+I hold a PhD in Sociology from the University of Arizona. My research focused on computational methods, advanced statistical methods, and social networks analysis in connection to interests in social networks, health behavior, diffusion, and communication technologies. 
+
+My dissertation focused on how people search for information and rely on this information to inform their health behaviors and develop social norms, particularly during times of uncertainty.
 
 I have a strong methodological background following my extensive quantitative and computational methods training at the University of Arizona. I have researched Latina/o Panethnicity, white fragility, and population health behaviors during  Covid-19, leading to publications in *Ethnic and Racial Studies*, *Sociological Perspectives*, *Journal on Migration and Human Security*, and the *Journal of Religion and Health*.
 
-My dissertation research focuses on how people search for information and rely on this information to inform their health behaviors and develop social norms, particularly during times of uncertainty.
+I am a [Certified RStudio Trainer](https://education.rstudio.com/trainers/) and a [Carpentries instructor](https://carpentries.org/instructors/). You can view some of my open source
+teaching materials at my [Youtube Channel](https://www.youtube.com/c/KelseyGonzalez),
+a [sample semester-long course website](https://american-stat-412612.netlify.app/) 
+or [3-day seminar materials](https://kelseygonzalez.github.io/workshop/2021-05-26-cpath/). 
 
-Currently, I am a Senior Data Scientist Intern for the Chief Analytics office at IBM. In this role, I produced ML-driven insights to address questions for workforce management and designed an unsupervised recommendation algorithm to provide IBM employees with actionable recommendations for reskilling.
+Feel free to get in touch via the contact form at the bottom of this page. 
 
-I am a [Certified RStudio Trainer](https://education.rstudio.com/trainers/) and a [Carpentries instructor](https://carpentries.org/instructors/). Locally, I am involved with data science education at the University of Arizona and previously was a [Senior Data Science Ambassador](https://datascience.arizona.edu/ambassadors) for the College of Social and Behavioral Sciences and a [Steering Committee member](http://researchbazaar.arizona.edu/) for Research Bazaar Arizona. 
+<!---Locally, I am involved with data science education at the University of Arizona and previously was a [Senior Data Science Ambassador](https://datascience.arizona.edu/ambassadors) for the College of Social and Behavioral Sciences and a [Steering Committee member](http://researchbazaar.arizona.edu/) for Research Bazaar Arizona.  -->
 
 <!---Kelsey received her MA in Sociology from the University of Arizona in 2018 where she investigated the impacts of personal networks and homophily on individuals’ perceptions of discrimination. Before coming to the University of Arizona, she earned her MPhil in Race, Ethnicity and Conflict from the Department of Sociology at Trinity College, Dublin in 2015.-->
