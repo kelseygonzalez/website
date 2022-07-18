@@ -5,18 +5,18 @@ authors:
 - admin
 - Liwen Zeng
 - Daniel E. Martínez
-date: "2021-12-07T00:00:00Z"
+date: "2022-08-07T00:00:00Z"
 doi: "10.1177/07311214211057121"
 featured: false
 image:
   focal_point: ""
   preview_only: false
 projects: []
-publication: '*Sociological Perspectives*, Online First'
-publication_short: "*Sociological Perspectives*, Online First"
+publication: '*Sociological Perspectives*, 65(4):702-726'
+publication_short: "*Sociological Perspectives*, 65(4):702-726"
 publication_types:
 - "2"
-publishDate: "2021-12-07T00:00:00Z"
+publishDate: "2022-08-07T00:00:00Z"
 tags:
 - Source Themes
 title: "The Correlates of Panethnic Identification: Assessing Similarities and Differences among Latinos and Asians in the United States"

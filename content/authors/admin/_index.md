@@ -1,12 +1,12 @@
 ---
 authors:
 - admin
-bio: Computational Social Scientist; Data Scientist; Sociologist. 
+bio: Data Scientist; Computational Social Scientist.
 education:
   courses:
   - course: PhD in Sociology
     institution: University of Arizona
-    year: Expected in 2022
+    year: 2022
   - course: Grad Certificate in Computational Social Science
     institution: University of Arizona
     year: 2020
@@ -16,12 +16,12 @@ education:
   - course: MPhil in Race, Ethnicity, and Conflict
     institution: Trinity College, Dublin
     year: 2015
-email: "kelseygonzalez@email.arizona.edu"
-interests:
-- Computational Social Science
-- Social Network Analysis
-- Social Epidemiology
-- Sociology of Race and Ethnicity
+email: "drkelseygonzalez@gmail.com"
+# interests:
+# - Computational Social Science
+# - Social Network Analysis
+# - Social Epidemiology
+# - Sociology of Race and Ethnicity
 organizations:
 - name: University of Arizona
   url: "https://sociology.arizona.edu/people/kelsey-gonzalez"
@@ -36,9 +36,6 @@ social:
 - icon: google-scholar
   icon_pack: ai
   link: https://scholar.google.com/citations?user=cnsY9p8AAAAJ
-- icon: orcid
-  icon_pack: ai
-  link: https://orcid.org/0000-0002-6592-8075
 - icon: github
   icon_pack: fab
   link: https://github.com/kelseygonzalez
@@ -56,7 +53,7 @@ My dissertation focused on how people search for information and rely on this in
 
 I have a strong methodological background following my extensive quantitative and computational methods training at the University of Arizona. I have researched Latina/o Panethnicity, white fragility, and population health behaviors during  Covid-19, leading to publications in *Ethnic and Racial Studies*, *Sociological Perspectives*, *Journal on Migration and Human Security*, and the *Journal of Religion and Health*.
 
-I am a [Certified RStudio Trainer](https://education.rstudio.com/trainers/) and a [Carpentries instructor](https://carpentries.org/instructors/). You can view some of my open source
+I am a [RStudio Academy Mentor](https://www.rstudio.com/academy/), [a Certified RStudio Trainer](https://education.rstudio.com/trainers/) and a [Carpentries instructor](https://carpentries.org/instructors/). You can view some of my open source
 teaching materials at my [Youtube Channel](https://www.youtube.com/c/KelseyGonzalez),
 a [sample semester-long course website](https://american-stat-412612.netlify.app/) 
 or [3-day seminar materials](https://kelseygonzalez.github.io/workshop/2021-05-26-cpath/). 
