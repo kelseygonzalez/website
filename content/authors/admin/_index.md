@@ -23,9 +23,8 @@ email: "drkelseygonzalez@gmail.com"
 # - Social Epidemiology
 # - Sociology of Race and Ethnicity
 organizations:
-- name: University of Arizona
-  url: "https://sociology.arizona.edu/people/kelsey-gonzalez"
-role: PhD Candidate
+- name: IBM
+role: Sr Data Scientist
 social:
 - icon: envelope
   icon_pack: fas
@@ -41,7 +40,7 @@ social:
   link: https://github.com/kelseygonzalez
   
 superuser: true
-title: Kelsey E. Gonzalez
+title: Kelsey E. Gonzalez, PhD 
 ---
 
 I'm a Senior Data Scientist in the Chief Analytics Office at IBM. Currently,
