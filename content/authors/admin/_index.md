@@ -24,14 +24,17 @@ email: "drkelseygonzalez@gmail.com"
 # - Sociology of Race and Ethnicity
 organizations:
 - name: IBM
-role: Sr Data Scientist
+role: Lead Data Scientist
 social:
 - icon: envelope
   icon_pack: fas
   link: '#contact'
-- icon: twitter
+- icon: linkedin
   icon_pack: fab
-  link: https://twitter.com/KelseyEGonzalez
+  link: https://www.linkedin.com/in/kelseygonzalez/  
+# - icon: twitter
+#   icon_pack: fab
+#   link: https://twitter.com/KelseyEGonzalez
 - icon: google-scholar
   icon_pack: ai
   link: https://scholar.google.com/citations?user=cnsY9p8AAAAJ
@@ -43,14 +46,10 @@ superuser: true
 title: Kelsey E. Gonzalez, PhD 
 ---
 
-I'm a Senior Data Scientist in the Chief Analytics Office at IBM. Currently,
-I apply NLP to build recommendations in the People Analytics domain. 
+I'm a Lead Data Scientist in the Chief Analytics Office at IBM. 
+Currently, I apply NLP to build recommendations in the People Analytics domain. 
 
-I hold a PhD in Sociology from the University of Arizona. My research focused on computational methods, advanced statistical methods, and social networks analysis in connection to interests in social networks, health behavior, diffusion, and communication technologies. 
-
-My dissertation focused on how people search for information and rely on this information to inform their health behaviors and develop social norms, particularly during times of uncertainty.
-
-I have a strong methodological background following my extensive quantitative and computational methods training at the University of Arizona. I have researched Latina/o Panethnicity, white fragility, and population health behaviors during  Covid-19, leading to publications in *Ethnic and Racial Studies*, *Sociological Perspectives*, *Journal on Migration and Human Security*, and the *Journal of Religion and Health*.
+I hold a PhD in Sociology from the University of Arizona. My research focused on social networks, health behavior, diffusion, and communication technologies. My PhD dissertation focused on how people search for information and rely on this information to inform their health behaviors and develop social norms, particularly during times of uncertainty. You can find some of my publications from journals like *Ethnic and Racial Studies*, *Sociological Perspectives*, *Journal on Migration and Human Security*, and the *Journal of Religion and Health* below.  
 
 I am a [RStudio Academy Mentor](https://www.rstudio.com/academy/), [a Certified RStudio Trainer](https://education.rstudio.com/trainers/) and a [Carpentries instructor](https://carpentries.org/instructors/). You can view some of my open source
 teaching materials at my [Youtube Channel](https://www.youtube.com/c/KelseyGonzalez),
