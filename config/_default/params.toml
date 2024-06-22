@@ -96,7 +96,8 @@ email = "kelseygonzalez@email.arizona.edu"
 
 # Geographic coordinates
 # To get your coordinates, right-click on Google Maps and choose "What's here?". The coords will show up at the bottom.
-coordinates = {latitude = "33.6055498", longitude = "-112.0740"}
+coordinates = {latitude = "35.913200", longitude = "-79.055847"}
+
 
 # Directions for visitors to locate you.
 #directions = "Enter Building 1 and take the stairs to Office 200 on Floor 2"
